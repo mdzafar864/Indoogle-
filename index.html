@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Indoogle Search</title>
+  <link rel="logo.png" href="public/favicon.ico">
+
+  <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 20px 20px 10px;
+      background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+      text-align: center;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    .header-text h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0f62fe;
+    }
+
+    .header-text h6 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #333;
+    }
+
+    .search-container {
+      text-align: center;
+      margin: 20px auto 10px;
+    }
+
+    input[type="text"] {
+      width: 70%;
+      max-width: 500px;
+      padding: 12px 16px;
+      border: 2px solid #0f62fe;
+      border-radius: 25px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-left: 10px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #0f62fe;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+
+    button i {
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: #0841b0;
+      transform: scale(1.05);
+    }
+
+    .shortcut-bar {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin: 20px auto;
+      max-width: 700px;
+    }
+
+    .shortcut {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #222;
+    }
+
+    .shortcut-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .shortcut-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .shortcut span {
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+
+    .results {
+      margin: 40px auto;
+      max-width: 700px;
+    }
+
+    .result-item {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+    }
+
+    .result-item a {
+      color: #0f62fe;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      margin-top: auto;
+    }
+
+    footer .social-icons {
+      margin-bottom: 10px;
+    }
+
+    footer .social-icons a {
+      color: #fff;
+      margin: 0 8px;
+      font-size: 1.3rem;
+      display: inline-block;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    footer .social-icons a:hover {
+      transform: scale(1.2);
+      color: #0f62fe;
+    }
+
+    footer .footer-nav {
+      margin: 10px 0;
+      font-size: 0.9rem;
+    }
+
+    footer .footer-nav a {
+      color: #bbb;
+      text-decoration: none;
+      margin: 0 5px;
+      transition: color 0.3s;
+    }
+
+    footer .footer-nav a:hover {
+      color: #0f62fe;
+    }
+
+    footer p {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="public/logo.png" alt="Indoogle Logo">
+    <div class="header-text">
+      <h1>Indoogle</h1>
+      <h6>India’s Own Search Engine, Built for Bharat</h6>
+    </div>
+  </header>
+
+  <div class="search-container">
+    <form id="searchForm">
+      <input type="text" id="query" placeholder="Search anything...">
+      <button type="submit">
+        <i class="fas fa-search"></i> Search
+      </button>
+    </form>
+  </div>
+
+  <!-- Shortcut Bar -->
+  <div class="shortcut-bar">
+    <a href="https://www.youtube.com/" target="_blank" class="shortcut">
+      <div class="shortcut-icon" style="color:red;"><i class="fab fa-youtube"></i></div>
+      <span>YouTube</span>
+    </a>
+    <a href="https://www.flipkart.com/" target="_blank" class="shortcut">
+      <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
+      <span>Flipkart</span>
+    </a>
+    <a href="https://www.amazon.in/" target="_blank" class="shortcut">
+      <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
+      <span>Amazon</span>
+    </a>
+    <a href="https://www.meesho.com/" target="_blank" class="shortcut">
+      <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
+      <span>Meesho</span>
+    </a>
+    <a href="https://www.ndtv.com/" target="_blank" class="shortcut">
+      <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
+      <span>NDTV</span>
+    </a>
+    <a href="https://timesofindia.indiatimes.com/" target="_blank" class="shortcut">
+      <div class="shortcut-icon" style="color:#333;"><i class="fa-regular fa-clock"></i></div>
+      <span>Times of India</span>
+    </a>
+  </div>
+
+  <main>
+    <section class="results" id="results"></section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+
+    <div class="footer-nav">
+      <a href="#">About</a> | 
+      <a href="#">Privacy</a> | 
+      <a href="#">Terms</a> | 
+      <a href="#">Contact</a>
+    </div>
+
+    <p>🇮🇳 Made with ❤️ in India | © 2025 Indoogle</p>
+  </footer>
+
+  <script>
+    const resultsDiv = document.getElementById("results");
+
+    // Wikipedia Search
+    document.getElementById("searchForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const query = document.getElementById("query").value.trim();
+      if (!query) return;
+
+      resultsDiv.innerHTML = "<p>Searching...</p>";
+
+      try {
+        const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`);
+        const data = await res.json();
+
+        if (data.query && data.query.search.length > 0) {
+          resultsDiv.innerHTML = data.query.search.map(r => `
+            <div class="result-item">
+              <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}" target="_blank">${r.title}</a>
+              <p>${r.snippet}...</p>
+            </div>
+          `).join("");
+        } else {
+          resultsDiv.innerHTML = "<p>No results found.</p>";
+        }
+      } catch (err) {
+        console.error(err);
+        resultsDiv.innerHTML = "<p>Error fetching results.</p>";
+      }
+    });
+  </script>
+</body>
+</html>
