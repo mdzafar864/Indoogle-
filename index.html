@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>Indoogle Search</title>
-  <link rel="logo.png" href="public/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="public/favicon.ico">
 
   <!-- Font Awesome CDN for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -193,16 +194,70 @@
       font-size: 0.85rem;
       color: #ccc;
     }
+
+    /* Responsive Styles for Mobile Devices */
+    @media (max-width: 600px) {
+      header img {
+        height: 40px;
+      }
+
+      .header-text h1 {
+        font-size: 1.5rem;
+      }
+
+      .header-text h6 {
+        font-size: 0.9rem;
+      }
+
+      .search-container input[type="text"] {
+        width: 98%;
+        min-width: 0;
+        font-size: 1rem;
+        padding: 10px 12px;
+      }
+
+      button {
+        margin: 8px 0 0 0;
+        width: 90%;
+        font-size: 0.98rem;
+      }
+
+      .shortcut-bar {
+        gap: 14px;
+        max-width: 98vw;
+      }
+
+      .shortcut-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.15rem;
+      }
+
+      .shortcut span {
+        font-size: 0.76rem;
+      }
+
+      .results {
+        margin: 24px 0;
+        padding: 0 4px;
+        max-width: 98vw;
+      }
+
+      footer {
+        font-size: 0.93rem;
+        padding: 14px 2px;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-  <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle Logo">
-  <div class="header-text">
-    <h1>Indoogle</h1>
-    <h6>India’s Own Search Engine, Built for Bharat</h6>
-  </div>
-</header>
+    <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle Logo">
+    <div class="header-text">
+      <h1>Indoogle</h1>
+      <h6>India’s Own Search Engine, Built for Bharat</h6>
+    </div>
+  </header>
 
   <div class="search-container">
     <form id="searchForm">
@@ -296,4 +351,5 @@
     });
   </script>
 </body>
-</html>
+  </html>
+  
