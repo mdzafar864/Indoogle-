@@ -56,16 +56,24 @@
     }
 
     input[type="text"] {
-      width: 70%;
+      width: 90%;
       max-width: 500px;
+      min-width: 0;
       padding: 12px 16px;
       border: 2px solid #0f62fe;
       border-radius: 25px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
 
     button {
-      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 340px;
+      min-width: 100px;
+      margin: 9px auto;
       padding: 12px 24px;
       border: none;
       border-radius: 25px;
@@ -74,8 +82,6 @@
       background: #0f62fe;
       color: #fff;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
       gap: 8px;
       transition: 0.3s;
     }
@@ -92,8 +98,8 @@
     .shortcut-bar {
       display: flex;
       justify-content: center;
-      gap: 25px;
       flex-wrap: wrap;
+      gap: 20px 24px;
       margin: 20px auto;
       max-width: 700px;
     }
@@ -104,6 +110,9 @@
       align-items: center;
       text-decoration: none;
       color: #222;
+      width: auto;
+      min-width: 95px;
+      margin-bottom: 8px;
     }
 
     .shortcut-icon {
@@ -126,6 +135,11 @@
     .shortcut span {
       margin-top: 6px;
       font-size: 0.85rem;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
     }
 
     .results {
@@ -217,20 +231,26 @@
       }
 
       button {
-        margin: 8px 0 0 0;
-        width: 90%;
-        font-size: 0.98rem;
+        width: 90vw;
+        font-size: 1.1rem;
+        padding: 13px 0;
       }
 
       .shortcut-bar {
-        gap: 14px;
         max-width: 98vw;
+        gap: 18px 10px;
+      }
+
+      .shortcut {
+        width: 30vw;
+        min-width: 95px;
+        margin-bottom: 8px;
       }
 
       .shortcut-icon {
-        width: 42px;
-        height: 42px;
-        font-size: 1.15rem;
+        width: 38px;
+        height: 38px;
+        font-size: 1.25rem;
       }
 
       .shortcut span {
@@ -351,4 +371,5 @@
     });
   </script>
 </body>
-  </html>  
+</html>
+  
