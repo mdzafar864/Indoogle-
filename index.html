@@ -5,257 +5,41 @@
     <meta charset="utf-8">
     <title>Indoogle Search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- Icons -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
-        }
-
-        body {
-            background: #f1f3f4;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        header {
-            background: #fff;
-            padding: 18px 0 10px;
-            border-bottom: 1px solid #e0e0e0;
-            position: relative;
-            text-align: center;
-        }
-
-        header img {
-            height: 55px;
-            margin-bottom: 5px;
-        }
-
-        header h1 {
-            font-size: 2.1rem;
-            color: #1a73e8;
-            margin-top: -5px;
-        }
-
-        .menu-btn {
-            position: absolute;
-            left: 15px;
-            top: 18px;
-            font-size: 25px;
-            cursor: pointer;
-            color: #222;
-        }
-
-        /* Drawer */
-        #drawer {
-            width: 260px;
-            height: 100%;
-            background: #ffffff;
-            position: fixed;
-            top: 0;
-            left: -260px;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.25);
-            transition: 0.35s;
-            z-index: 999;
-            overflow-y: auto;
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            display: none;
-            z-index: 900;
-        }
-
-        /* Profile Dashboard in Drawer */
-        .user-dashboard {
-            width: 100%;
-            max-width: 420px;
-            margin: 10px auto 20px;
-            background: #ffffff;
-            padding: 18px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            text-align: center;
-        }
-
-        .user-dashboard img {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            border: 3px solid #1a73e8;
-        }
-
-        .user-dashboard h2 {
-            font-size: 1.3rem;
-            margin-top: 10px;
-            color: #222;
-        }
-
-        .user-dashboard p {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: 0.25s;
-        }
-
-        .menu-item:hover {
-            background: #eaeaea;
-        }
-
-        .search-container {
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        input[type="text"] {
-            width: 85%;
-            max-width: 550px;
-            padding: 16px 20px;
-            border-radius: 40px;
-            border: 1px solid #dadce0;
-            background: #fff;
-            font-size: 1rem;
-            transition: 0.25s;
-        }
-
-        input:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-        }
-
-        button {
-            margin-top: 15px;
-            padding: 12px 35px;
-            border-radius: 30px;
-            border: none;
-            background: #1a73e8;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #1558c7;
-        }
-
-        .shortcut-bar {
-            margin: 35px auto 20px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 25px 30px;
-        }
-    .shortcut-bar {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px 24px;
-      margin: 20px auto;
-      max-width: 700px;
-    }
-
-    .shortcut {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: #222;
-      width: auto;
-      min-width: 95px;
-      margin-bottom: 8px;
-    }
-
-    .shortcut-icon {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-    }
-
-    .shortcut-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .shortcut span {
-      margin-top: 6px;
-      font-size: 0.85rem;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100px;
-    }
-    
-        footer {
-            margin-top: 40px;
-            padding: 15px 0;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #555;
-        }
-
-        /* LOCK POPUP */
-        #forceLoginPopup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.75);
-            display: none;
-            z-index: 2000;
-            backdrop-filter: blur(4px);
-            text-align: center;
-            padding-top: 120px;
-        }
-
-        /* Dark mode theming */
-        body.dark-mode {
-            background: #121212;
-            color: #f1f3f4;
-        }
-        body.dark-mode header,
-        body.dark-mode footer,
-        body.dark-mode #drawer,
-        body.dark-mode input[type="text"],
-        body.dark-mode button {
-            background: #1e1e1e;
-            color: #f1f3f4;
-            border-color: #333;
-        }
-        body.dark-mode .shortcut-icon {
-            background: #2c2c2c;
-        }
-        body.dark-mode input:focus {
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
-        }
+        /* Your CSS remains unchanged */
+        * {margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif;}
+        body {background:#f1f3f4; min-height:100vh; overflow-x:hidden;}
+        header {background:#fff; padding:18px 0 10px; border-bottom:1px solid #e0e0e0; position:relative; text-align:center;}
+        header img {height:55px; margin-bottom:5px;}
+        header h1 {font-size:2.1rem; color:#1a73e8; margin-top:-5px;}
+        .menu-btn {position:absolute; left:15px; top:18px; font-size:25px; cursor:pointer; color:#222;}
+        #drawer {width:260px; height:100%; background:#fff; position:fixed; top:0; left:-260px; padding:20px; box-shadow:2px 0 10px rgba(0,0,0,0.25); transition:0.35s; z-index:999; overflow-y:auto;}
+        #overlay {position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.45); display:none; z-index:900;}
+        .user-dashboard {width:100%; max-width:420px; margin:10px auto 20px; background:#fff; padding:18px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.15); text-align:center;}
+        .user-dashboard img {width:85px; height:85px; border-radius:50%; border:3px solid #1a73e8;}
+        .user-dashboard h2 {font-size:1.3rem; margin-top:10px; color:#222;}
+        .user-dashboard p {font-size:0.9rem; color:#666;}
+        .menu-item {display:flex; align-items:center; gap:15px; padding:12px 5px; font-size:1rem; cursor:pointer; border-radius:8px; transition:0.25s;}
+        .menu-item:hover {background:#eaeaea;}
+        .search-container {margin-top:15px; text-align:center;}
+        input[type="text"] {width:85%; max-width:550px; padding:16px 20px; border-radius:40px; border:1px solid #dadce0; background:#fff; font-size:1rem; transition:0.25s;}
+        input:focus {border-color:#1a73e8; box-shadow:0 4px 12px rgba(26,115,232,0.3);}
+        button {margin-top:15px; padding:12px 35px; border-radius:30px; border:none; background:#1a73e8; color:#fff; font-size:1rem; cursor:pointer;}
+        button:hover {background:#1558c7;}
+        .shortcut-bar {display:flex; justify-content:center; flex-wrap:wrap; gap:20px 24px; margin:20px auto; max-width:700px;}
+        .shortcut {display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#222; width:auto; min-width:95px; margin-bottom:8px;}
+        .shortcut-icon {width:55px; height:55px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.6rem; box-shadow:0 2px 5px rgba(0,0,0,0.1); transition:transform 0.3s;}
+        .shortcut-icon:hover {transform:scale(1.1);}
+        .shortcut span {margin-top:6px; font-size:0.85rem; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100px;}
+        footer {margin-top:40px; padding:15px 0; text-align:center; font-size:0.85rem; color:#555;}
+        #forceLoginPopup {position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); display:none; z-index:2000; backdrop-filter:blur(4px); text-align:center; padding-top:120px;}
+        body.dark-mode {background:#121212; color:#f1f3f4;}
+        body.dark-mode header, body.dark-mode footer, body.dark-mode #drawer, body.dark-mode input[type="text"], body.dark-mode button {background:#1e1e1e; color:#f1f3f4; border-color:#333;}
+        body.dark-mode .shortcut-icon {background:#2c2c2c;}
+        body.dark-mode input:focus {box-shadow:0 4px 12px rgba(26,115,232,0.5);}
     </style>
 </head>
 
@@ -265,7 +49,6 @@
 
     <!-- Drawer -->
     <div id="drawer">
-         
         <div class="user-dashboard">
             <img id="profilePic" src="https://i.ibb.co/8jW3P0b/default-user.png">
             <h2 id="profileName">Guest User</h2>
@@ -289,7 +72,6 @@
         <div class="menu-item"><i class="fas fa-share-alt"></i> Share</div>
         <div class="menu-item"><i class="fas fa-info-circle"></i> About</div>
         <div class="menu-item"><i class="fas fa-times-circle"></i> Exit</div>
-
     </div>
 
     <!-- Header -->
@@ -314,31 +96,26 @@
             <div class="shortcut-icon" style="color:red;"><i class="fab fa-youtube"></i></div>
             <span>YouTube</span>
         </a>
-
         <a class="shortcut" href="https://flipkart.com" target="_blank">
             <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
             <span>Flipkart</span>
         </a>
-
         <a class="shortcut" href="https://amazon.in" target="_blank">
             <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
             <span>Amazon</span>
         </a>
-        
-          <a href="https://www.meesho.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
-      <span>Meesho</span>
-    </a>
-    
-    <a href="https://www.ndtv.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
-      <span>NDTV</span>
-    </a>
-    
-    <a href="https://timesofindia.indiatimes.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#333;"><i class="fa-regular fa-clock"></i></div>
-      <span>Times of India</span>
-    </a>
+        <a href="https://www.meesho.com/" target="_blank" class="shortcut">
+            <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
+            <span>Meesho</span>
+        </a>
+        <a href="https://www.ndtv.com/" target="_blank" class="shortcut">
+            <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
+            <span>NDTV</span>
+        </a>
+        <a href="https://timesofindia.indiatimes.com/" target="_blank" class="shortcut">
+            <div class="shortcut-icon" style="color:#333;"><i class="fa-regular fa-clock"></i></div>
+            <span>Times of India</span>
+        </a>
     </div>
 
     <footer>
@@ -347,19 +124,9 @@
 
     <!-- 🛑 LOCK POPUP -->
     <div id="forceLoginPopup">
-        <div style="
-            background:white;
-            width:85%;
-            max-width:350px;
-            margin:auto;
-            padding:25px;
-            border-radius:15px;
-            box-shadow:0 5px 15px rgba(0,0,0,0.3);
-        ">
+        <div style="background:white; width:85%; max-width:350px; margin:auto; padding:25px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
             <h2 style="color:#e53935;margin-bottom:10px;">⚠ Login Required</h2>
-            <p style="font-size:1rem;margin-bottom:20px;">
-                Please login to continue.<br>Without login you cannot use this browser.
-            </p>
+            <p style="font-size:1rem;margin-bottom:20px;">Please login to continue.<br>Without login you cannot use this browser.</p>
             <button id="forceLoginBtn"
                 style="padding:12px 30px;background:#1a73e8;color:white;border:none;border-radius:8px;cursor:pointer;">
                 Login with Google
@@ -369,9 +136,8 @@
 
     <!-- Firebase + Login System -->
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
             from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -421,11 +187,18 @@
         });
 
         // LOGIN
-        loginBtn.onclick = () => {
-            signInWithPopup(auth, provider)
-                .then(result => updateUI(result.user));
-        };
-        forceLoginBtn.onclick = loginBtn.onclick;
+        function login() {
+            signInWithRedirect(auth, provider);
+        }
+        loginBtn.onclick = login;
+        forceLoginBtn.onclick = login;
+
+        // Handle redirect result
+        getRedirectResult(auth)
+            .then(result => {
+                if (result.user) updateUI(result.user);
+            })
+            .catch(err => console.error("Login error:", err));
 
         // LOGOUT
         logoutBtn.onclick = () => {
@@ -438,7 +211,6 @@
                 profilePic.src = user.photoURL;
                 profileName.innerText = user.displayName;
                 profileEmail.innerText = user.email;
-                
                 loginBtn.style.display = "none";
                 logoutBtn.style.display = "block";
                 forcePopup.style.display = "none";
@@ -446,11 +218,9 @@
                 profilePic.src = "https://i.ibb.co/8jW3P0b/default-user.png";
                 profileName.innerText = "Guest User";
                 profileEmail.innerText = "Not Logged In";
-
                 loginBtn.style.display = "block";
                 logoutBtn.style.display = "none";
-
-                forcePopup.style.display = "block";  // Lock again
+                forcePopup.style.display = "block";
             }
         }
 
@@ -459,37 +229,19 @@
 
         // Show lock popup after 10 sec if not logged in
         setTimeout(() => {
-            if (!auth.currentUser) {
-                forcePopup.style.display = "block";
-            }
-        }, 100000);
+            if (!auth.currentUser) forcePopup.style.display = "block";
+        }, 10000);
 
         // MENU ITEMS FUNCTIONALITY
         const menuItems = document.querySelectorAll(".menu-item");
-
-        // Refresh
         menuItems[0].onclick = () => location.reload();
-
-        // Settings
         menuItems[1].onclick = () => alert("Settings page coming soon!");
-
-        // Theming
         menuItems[2].onclick = () => document.body.classList.toggle("dark-mode");
-
-        // Share
         menuItems[3].onclick = async () => {
-            try {
-                await navigator.clipboard.writeText(window.location.href);
-                alert("Page URL copied to clipboard!");
-            } catch (err) {
-                alert("Failed to copy URL: " + err);
-            }
+            try { await navigator.clipboard.writeText(window.location.href); alert("Page URL copied!"); }
+            catch (err) { alert("Failed: " + err); }
         };
-
-        // About
         menuItems[4].onclick = () => alert("Indoogle - India’s Own Search Engine\n© 2025 Made with ❤️ in India");
-
-        // Exit
         menuItems[5].onclick = () => {
             if(confirm("Are you sure you want to exit?")) {
                 signOut(auth).then(() => {
@@ -497,14 +249,11 @@
                     drawer.style.left = "-260px";
                     overlay.style.display = "none";
                     alert("You have exited. Please close the tab.");
-                    // Try to close tab (works if opened via JS)
                     window.open('', '_self').close();
                 });
             }
         };
-
     </script>
 
 </body>
-
 </html>
