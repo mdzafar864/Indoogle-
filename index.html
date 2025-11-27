@@ -1,100 +1,171 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <title>Indoogle Search</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="public/favicon.ico">
+    <meta charset="utf-8">
+    <title>Indoogle Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Font Awesome CDN for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f7f9fc;
-      margin: 0;
-      padding: 0;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
 
-    header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      padding: 20px 20px 10px;
-      background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
-      text-align: center;
-    }
+        body {
+            background: #f1f3f4;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    header img {
-      height: 50px;
-    }
+        header {
+            background: #fff;
+            padding: 18px 0 10px;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+            text-align: center;
+        }
 
-    .header-text h1 {
-      margin: 0;
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #0f62fe;
-    }
+        header img {
+            height: 55px;
+            margin-bottom: 5px;
+        }
 
-    .header-text h6 {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 400;
-      color: #333;
-    }
+        header h1 {
+            font-size: 2.1rem;
+            color: #1a73e8;
+            margin-top: -5px;
+        }
 
-    .search-container {
-      text-align: center;
-      margin: 20px auto 10px;
-    }
+        .menu-btn {
+            position: absolute;
+            left: 15px;
+            top: 18px;
+            font-size: 25px;
+            cursor: pointer;
+            color: #222;
+        }
 
-    input[type="text"] {
-      width: 90%;
-      max-width: 500px;
-      min-width: 0;
-      padding: 12px 16px;
-      border: 2px solid #0f62fe;
-      border-radius: 25px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
+        /* Drawer */
+        #drawer {
+            width: 260px;
+            height: 100%;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            left: -260px;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.25);
+            transition: 0.35s;
+            z-index: 999;
+            overflow-y: auto;
+        }
 
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 340px;
-      min-width: 100px;
-      margin: 9px auto;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
-      font-weight: 600;
-      background: #0f62fe;
-      color: #fff;
-      cursor: pointer;
-      gap: 8px;
-      transition: 0.3s;
-    }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            z-index: 900;
+        }
 
-    button i {
-      font-size: 1rem;
-    }
+        /* Profile Dashboard in Drawer */
+        .user-dashboard {
+            width: 100%;
+            max-width: 420px;
+            margin: 10px auto 20px;
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
 
-    button:hover {
-      background: #0841b0;
-      transform: scale(1.05);
-    }
+        .user-dashboard img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: 3px solid #1a73e8;
+        }
 
+        .user-dashboard h2 {
+            font-size: 1.3rem;
+            margin-top: 10px;
+            color: #222;
+        }
+
+        .user-dashboard p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.25s;
+        }
+
+        .menu-item:hover {
+            background: #eaeaea;
+        }
+
+        .search-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 85%;
+            max-width: 550px;
+            padding: 16px 20px;
+            border-radius: 40px;
+            border: 1px solid #dadce0;
+            background: #fff;
+            font-size: 1rem;
+            transition: 0.25s;
+        }
+
+        input:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 35px;
+            border-radius: 30px;
+            border: none;
+            background: #1a73e8;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1558c7;
+        }
+
+        .shortcut-bar {
+            margin: 35px auto 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px 30px;
+        }
     .shortcut-bar {
       display: flex;
       justify-content: center;
@@ -141,235 +212,299 @@
       text-overflow: ellipsis;
       max-width: 100px;
     }
+    
+        footer {
+            margin-top: 40px;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #555;
+        }
 
-    .results {
-      margin: 40px auto;
-      max-width: 700px;
-    }
+        /* LOCK POPUP */
+        #forceLoginPopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+            text-align: center;
+            padding-top: 120px;
+        }
 
-    .result-item {
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      margin-bottom: 15px;
-    }
-
-    .result-item a {
-      color: #0f62fe;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* --- Footer --- */
-    footer {
-      background: #111;
-      color: #fff;
-      text-align: center;
-      padding: 20px 10px;
-      margin-top: auto;
-    }
-
-    footer .social-icons {
-      margin-bottom: 10px;
-    }
-
-    footer .social-icons a {
-      color: #fff;
-      margin: 0 8px;
-      font-size: 1.3rem;
-      display: inline-block;
-      transition: transform 0.3s, color 0.3s;
-    }
-
-    footer .social-icons a:hover {
-      transform: scale(1.2);
-      color: #0f62fe;
-    }
-
-    footer .footer-nav {
-      margin: 10px 0;
-      font-size: 0.9rem;
-    }
-
-    footer .footer-nav a {
-      color: #bbb;
-      text-decoration: none;
-      margin: 0 5px;
-      transition: color 0.3s;
-    }
-
-    footer .footer-nav a:hover {
-      color: #0f62fe;
-    }
-
-    footer p {
-      margin-top: 8px;
-      font-size: 0.85rem;
-      color: #ccc;
-    }
-
-    /* Responsive Styles for Mobile Devices */
-    @media (max-width: 600px) {
-      header img {
-        height: 40px;
-      }
-
-      .header-text h1 {
-        font-size: 1.5rem;
-      }
-
-      .header-text h6 {
-        font-size: 0.9rem;
-      }
-
-      .search-container input[type="text"] {
-        width: 98%;
-        min-width: 0;
-        font-size: 1rem;
-        padding: 10px 12px;
-      }
-
-      button {
-        width: 90vw;
-        font-size: 1.1rem;
-        padding: 13px 0;
-      }
-
-      .shortcut-bar {
-        max-width: 98vw;
-        gap: 18px 10px;
-      }
-
-      .shortcut {
-        width: 30vw;
-        min-width: 95px;
-        margin-bottom: 8px;
-      }
-
-      .shortcut-icon {
-        width: 38px;
-        height: 38px;
-        font-size: 1.25rem;
-      }
-
-      .shortcut span {
-        font-size: 0.76rem;
-      }
-
-      .results {
-        margin: 24px 0;
-        padding: 0 4px;
-        max-width: 98vw;
-      }
-
-      footer {
-        font-size: 0.93rem;
-        padding: 14px 2px;
-      }
-    }
-  </style>
+        /* Dark mode theming */
+        body.dark-mode {
+            background: #121212;
+            color: #f1f3f4;
+        }
+        body.dark-mode header,
+        body.dark-mode footer,
+        body.dark-mode #drawer,
+        body.dark-mode input[type="text"],
+        body.dark-mode button {
+            background: #1e1e1e;
+            color: #f1f3f4;
+            border-color: #333;
+        }
+        body.dark-mode .shortcut-icon {
+            background: #2c2c2c;
+        }
+        body.dark-mode input:focus {
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle Logo">
-    <div class="header-text">
-      <h1>Indoogle</h1>
-      <h6>India’s Own Search Engine, Built for Bharat</h6>
+
+    <div id="overlay"></div>
+
+    <!-- Drawer -->
+    <div id="drawer">
+         
+        <div class="user-dashboard">
+            <img id="profilePic" src="https://i.ibb.co/8jW3P0b/default-user.png">
+            <h2 id="profileName">Guest User</h2>
+            <p id="profileEmail">Not Logged In</p>
+        </div>
+
+        <button id="logoutBtn"
+            style="padding:10px 20px;background:#ff3b30;color:#fff;border:none;border-radius:8px;cursor:pointer;display:none;">
+            Logout
+        </button>
+        <button id="loginBtn"
+            style="padding:10px 20px;background:#1a73e8;color:#fff;border:none;border-radius:8px;cursor:pointer;">
+            Login with Google
+        </button>
+
+        <hr style="margin:14px 0;">
+
+        <div class="menu-item"><i class="fas fa-redo"></i> Refresh</div>
+        <div class="menu-item"><i class="fas fa-cog"></i> Settings</div>
+        <div class="menu-item"><i class="fas fa-palette"></i> Theming</div>
+        <div class="menu-item"><i class="fas fa-share-alt"></i> Share</div>
+        <div class="menu-item"><i class="fas fa-info-circle"></i> About</div>
+        <div class="menu-item"><i class="fas fa-times-circle"></i> Exit</div>
+
     </div>
-  </header>
 
-  <div class="search-container">
-    <form id="searchForm">
-      <input type="text" id="query" placeholder="Search anything...">
-      <button type="submit">
-        <i class="fas fa-search"></i> Search
-      </button>
-    </form>
-  </div>
+    <!-- Header -->
+    <header>
+        <div class="menu-btn" id="openMenu"><i class="fas fa-bars"></i></div>
+        <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png">
+        <h1>Indoogle</h1>
+        <h6>India’s Own Search Engine, Built for Bharat</h6>
+    </header>
 
-  <!-- Shortcut Bar -->
-  <div class="shortcut-bar">
-    <a href="https://www.youtube.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:red;"><i class="fab fa-youtube"></i></div>
-      <span>YouTube</span>
-    </a>
-    <a href="https://www.flipkart.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
-      <span>Flipkart</span>
-    </a>
-    <a href="https://www.amazon.in/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
-      <span>Amazon</span>
-    </a>
-    <a href="https://www.meesho.com/" target="_blank" class="shortcut">
+    <!-- Search -->
+    <div class="search-container">
+        <form id="searchForm">
+            <input id="query" type="text" placeholder="Search anything...">
+            <button type="submit"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+
+    <!-- Shortcut icons -->
+    <div class="shortcut-bar">
+        <a class="shortcut" href="https://youtube.com" target="_blank">
+            <div class="shortcut-icon" style="color:red;"><i class="fab fa-youtube"></i></div>
+            <span>YouTube</span>
+        </a>
+
+        <a class="shortcut" href="https://flipkart.com" target="_blank">
+            <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
+            <span>Flipkart</span>
+        </a>
+
+        <a class="shortcut" href="https://amazon.in" target="_blank">
+            <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
+            <span>Amazon</span>
+        </a>
+        
+          <a href="https://www.meesho.com/" target="_blank" class="shortcut">
       <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
       <span>Meesho</span>
     </a>
+    
     <a href="https://www.ndtv.com/" target="_blank" class="shortcut">
       <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
       <span>NDTV</span>
     </a>
+    
     <a href="https://timesofindia.indiatimes.com/" target="_blank" class="shortcut">
       <div class="shortcut-icon" style="color:#333;"><i class="fa-regular fa-clock"></i></div>
       <span>Times of India</span>
     </a>
-  </div>
-
-  <main>
-    <section class="results" id="results"></section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="social-icons">
-      <a href="#"><i class="fab fa-facebook-f"></i></a>
-      <a href="#"><i class="fab fa-twitter"></i></a>
-      <a href="#"><i class="fab fa-instagram"></i></a>
-      <a href="#"><i class="fab fa-linkedin-in"></i></a>
     </div>
 
-    <div class="footer-nav">
-      <a href="#">About</a> | 
-      <a href="#">Privacy</a> | 
-      <a href="#">Terms</a> | 
-      <a href="#">Contact</a>
+    <footer>
+        <p>🇮🇳 Made with ❤️ in India | © 2025 Indoogle</p>
+    </footer>
+
+    <!-- 🛑 LOCK POPUP -->
+    <div id="forceLoginPopup">
+        <div style="
+            background:white;
+            width:85%;
+            max-width:350px;
+            margin:auto;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.3);
+        ">
+            <h2 style="color:#e53935;margin-bottom:10px;">⚠ Login Required</h2>
+            <p style="font-size:1rem;margin-bottom:20px;">
+                Please login to continue.<br>Without login you cannot use this browser.
+            </p>
+            <button id="forceLoginBtn"
+                style="padding:12px 30px;background:#1a73e8;color:white;border:none;border-radius:8px;cursor:pointer;">
+                Login with Google
+            </button>
+        </div>
     </div>
 
-    <p>🇮🇳 Made with ❤️ in India | © 2025 Indoogle</p>
-  </footer>
+    <!-- Firebase + Login System -->
+    <script type="module">
 
-  <script>
-    const resultsDiv = document.getElementById("results");
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
-    // Wikipedia Search
-    document.getElementById("searchForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const query = document.getElementById("query").value.trim();
-      if (!query) return;
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXGwcHR_JrwLfW0vpZmR39rCpRJPBzBBo",
+            authDomain: "indoogle.firebaseapp.com",
+            projectId: "indoogle",
+            storageBucket: "indoogle.firebasestorage.app",
+            messagingSenderId: "249811375898",
+            appId: "1:249811375898:web:126b7f33edbf7cbb58bea3",
+            measurementId: "G-YCFM3F2JTL"
+        };
 
-      resultsDiv.innerHTML = "<p>Searching...</p>";
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-      try {
-        const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`);
-        const data = await res.json();
+        const drawer = document.getElementById("drawer");
+        const overlay = document.getElementById("overlay");
+        const openMenu = document.getElementById("openMenu");
 
-        if (data.query && data.query.search.length > 0) {
-          resultsDiv.innerHTML = data.query.search.map(r => `
-            <div class="result-item">
-              <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}" target="_blank">${r.title}</a>
-              <p>${r.snippet}...</p>
-            </div>
-          `).join("");
-        } else {
-          resultsDiv.innerHTML = "<p>No results found.</p>";
+        const loginBtn = document.getElementById("loginBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        const profilePic = document.getElementById("profilePic");
+        const profileName = document.getElementById("profileName");
+        const profileEmail = document.getElementById("profileEmail");
+
+        const forcePopup = document.getElementById("forceLoginPopup");
+        const forceLoginBtn = document.getElementById("forceLoginBtn");
+
+        // Drawer open/close
+        openMenu.onclick = () => {
+            drawer.style.left = "0px";
+            overlay.style.display = "block";
+        };
+        overlay.onclick = () => {
+            drawer.style.left = "-260px";
+            overlay.style.display = "none";
+        };
+
+        // Search
+        document.getElementById("searchForm").addEventListener("submit", e => {
+            e.preventDefault();
+            let q = document.getElementById("query").value.trim();
+            if (!q) return;
+            window.open("https://www.google.com/search?q=" + encodeURIComponent(q), "_blank");
+        });
+
+        // LOGIN
+        loginBtn.onclick = () => {
+            signInWithPopup(auth, provider)
+                .then(result => updateUI(result.user));
+        };
+        forceLoginBtn.onclick = loginBtn.onclick;
+
+        // LOGOUT
+        logoutBtn.onclick = () => {
+            signOut(auth).then(() => updateUI(null));
+        };
+
+        // UI Update
+        function updateUI(user) {
+            if (user) {
+                profilePic.src = user.photoURL;
+                profileName.innerText = user.displayName;
+                profileEmail.innerText = user.email;
+                
+                loginBtn.style.display = "none";
+                logoutBtn.style.display = "block";
+                forcePopup.style.display = "none";
+            } else {
+                profilePic.src = "https://i.ibb.co/8jW3P0b/default-user.png";
+                profileName.innerText = "Guest User";
+                profileEmail.innerText = "Not Logged In";
+
+                loginBtn.style.display = "block";
+                logoutBtn.style.display = "none";
+
+                forcePopup.style.display = "block";  // Lock again
+            }
         }
-      } catch (err) {
-        console.error(err);
-        resultsDiv.innerHTML = "<p>Error fetching results.</p>";
-      }
-    });
-  </script>
+
+        // Auto check login
+        onAuthStateChanged(auth, user => updateUI(user));
+
+        // Show lock popup after 10 sec if not logged in
+        setTimeout(() => {
+            if (!auth.currentUser) {
+                forcePopup.style.display = "block";
+            }
+        }, 100000);
+
+        // MENU ITEMS FUNCTIONALITY
+        const menuItems = document.querySelectorAll(".menu-item");
+
+        // Refresh
+        menuItems[0].onclick = () => location.reload();
+
+        // Settings
+        menuItems[1].onclick = () => alert("Settings page coming soon!");
+
+        // Theming
+        menuItems[2].onclick = () => document.body.classList.toggle("dark-mode");
+
+        // Share
+        menuItems[3].onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                alert("Page URL copied to clipboard!");
+            } catch (err) {
+                alert("Failed to copy URL: " + err);
+            }
+        };
+
+        // About
+        menuItems[4].onclick = () => alert("Indoogle - India’s Own Search Engine\n© 2025 Made with ❤️ in India");
+
+        // Exit
+        menuItems[5].onclick = () => {
+            if(confirm("Are you sure you want to exit?")) {
+                signOut(auth).then(() => {
+                    updateUI(null);
+                    drawer.style.left = "-260px";
+                    overlay.style.display = "none";
+                    alert("You have exited. Please close the tab.");
+                    // Try to close tab (works if opened via JS)
+                    window.open('', '_self').close();
+                });
+            }
+        };
+
+    </script>
+
 </body>
+
 </html>
-  
