@@ -1,0 +1,5 @@
+[
+  {"name":"YouTube","url":"https://youtube.com","icon":"fab fa-youtube","color":"red"},
+  {"name":"Flipkart","url":"https://flipkart.com","icon":"fa-solid fa-cart-shopping","color":"#2874f0"},
+  {"name":"Amazon","url":"https://amazon.in","icon":"fab fa-amazon","color":"#ff9900"}
+]
