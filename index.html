@@ -7,16 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#1a73e8">
+    <link rel="manifest" href="/Indoogle-/manifest.json">
+    <meta name="theme-color" content="#0066ff">
+
 
     <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/service-worker.js")
-                .then(reg => console.log("SW Registered:", reg))
-                .catch(err => console.log("SW Error:", err));
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/Indoogle-/service-worker.js").then((reg) => {
+    
+    reg.onupdatefound = () => {
+      const newWorker = reg.installing;
+
+      newWorker.onstatechange = () => {
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+
+          // NEW UPDATE FOUND → AUTO RELOAD
+          newWorker.postMessage("skipWaiting");
+          window.location.reload();
         }
-    </script>
+      };
+    };
+
+  });
+}
+</script>
 
     <!-- Icons -->
     <link rel="stylesheet"
