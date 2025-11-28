@@ -370,20 +370,9 @@
     <!-- Firebase + Login System -->
     <script type="module">
 
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
-
-loginBtn.onclick = () => signInWithRedirect(auth, provider);
-
-// After redirect, handle login result
-getRedirectResult(auth).then((result) => {
-    if(result.user) updateUI(result.user);
-}).catch((error) => {
-    console.error(error);
-});
-
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCXGwcHR_JrwLfW0vpZmR39rCpRJPBzBBo",
