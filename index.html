@@ -6,6 +6,18 @@
     <title>Indoogle Search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1a73e8">
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then(reg => console.log("SW Registered:", reg))
+                .catch(err => console.log("SW Error:", err));
+        }
+    </script>
+
     <!-- Icons -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -503,6 +515,33 @@
             }
         };
 
+    </script>
+
+    <!-- 🔥 AUTO UPDATE (NEW VERSION AVAILABLE POPUP) -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            let newWorker;
+
+            navigator.serviceWorker.addEventListener("controllerchange", () => {
+                window.location.reload();
+            });
+
+            navigator.serviceWorker.getRegistration().then(reg => {
+                if (!reg) return;
+
+                reg.addEventListener("updatefound", () => {
+                    newWorker = reg.installing;
+
+                    newWorker.addEventListener("statechange", () => {
+                        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                            if (confirm("🔄 New update available! Refresh now?")) {
+                                newWorker.postMessage({ action: "skipWaiting" });
+                            }
+                        }
+                    });
+                });
+            });
+        }
     </script>
 
 </body>
