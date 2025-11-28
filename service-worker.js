@@ -1,59 +1,51 @@
-const CACHE_NAME = "indooggle-cache-v2";
+const CACHE_NAME = "indoogle-cache-v2";
 
-// Files to precache
-const PRECACHE_ASSETS = [
-  "/",
-  "/index.html",
-  "/icon-192.png",
-  "/icon-512.png",
-  "/logo.png"
+// Precache list
+const PRECACHE = [
+  "./",
+  "./index.html",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./logo.png"
 ];
 
-// INSTALL — Cache core files
+// INSTALL
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // Activate new SW immediately
-
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_ASSETS);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE))
   );
 });
 
-// ACTIVATE — Remove old cache
+// ACTIVATE
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
+    caches.keys().then(keys =>
       Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
+        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
       )
     )
   );
-  self.clients.claim(); // Take control immediately
+  self.clients.claim();
 });
 
-// FETCH — Network First + Cache fallback
+// FETCH — Network First + Cache Fallback
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(event.request)
-      .then((networkResponse) => {
-        // Update cache with fresh copy
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, networkResponse.clone());
+      .then(response => {
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, response.clone());
         });
-
-        return networkResponse.clone();
+        return response.clone();
       })
-      .catch(() => caches.match(event.request)) // Offline fallback
+      .catch(() => caches.match(event.request))
   );
 });
 
-// MESSAGE from client to trigger refresh
+// AUTO-UPDATE MESSAGE
 self.addEventListener("message", (event) => {
   if (event.data === "skipWaiting") {
     self.skipWaiting();
   }
 });
-      
