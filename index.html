@@ -5,6 +5,9 @@
   <title>Indoogle Browser</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), bluetooth=()">
   <meta name="theme-color" content="#111827">
   <link rel="manifest" href="/Indoogle-/manifest.json">
@@ -843,8 +846,8 @@
             <span id="statusPill" class="status-pill"><i class="fa-solid fa-shield"></i> Privacy Mode ON</span>
             <div class="toggle-row"><span>Privacy Mode</span><label class="switch"><input type="checkbox" id="privacyToggle" checked><span class="slider"></span></label></div>
             <div class="toggle-row"><span>Ad Block Basic</span><label class="switch"><input type="checkbox" id="adBlockToggle" checked><span class="slider"></span></label></div>
-            <p id="privacyText" style="margin-top:10px;color:var(--muted);font-weight:700;font-size:.82rem;line-height:1.5">ON: Indoogle local history save nahi hogi. DuckDuckGo default search rahega.</p>
-            <div class="adblock-note" id="adBlockText"><i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking ke liye real browser extension/app chahiye.</div>
+            <p id="privacyText" style="margin-top:10px;color:var(--muted);font-weight:700;font-size:.82rem;line-height:1.5">ON: Indoogle local history/storage save nahi hogi. Note: Chrome/Google App ki browser history ko website control nahi kar sakti.</p>
+            <div class="adblock-note" id="adBlockText"><i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking aur Chrome/Google App history hide karne ke liye Incognito/real private browser chahiye.</div>
             <div class="history-list" id="historyList"></div>
             <button class="small-btn" id="clearHistoryBtn"><i class="fa-solid fa-broom"></i> Clear History</button>
             <button class="small-btn danger" id="clearDataBtn"><i class="fa-solid fa-trash"></i> Clear Private Data</button>
@@ -1020,12 +1023,12 @@
     const ENGINE_ORDER = ['duckduckgo','brave','startpage','qwant','ecosia','mojeek','swisscows','metager','presearch','yep','you','perplexity','kagi','searxng','bing','yahoo','google','yandex','baidu','internetarchive','wikipedia','reddit','github','alternativeto'];
     let activeEngine = 'duckduckgo';
 
-    let privacyMode = localStorage.getItem('indooglePrivacyMode');
-    if(privacyMode === null) privacyMode = 'on';
+    // True private default: localStorage se privacy setting read/write nahi karte.
+    // Website Chrome/Google App ki browser history ko delete/block nahi kar sakti; uske liye Incognito/Google Activity setting chahiye.
+    let privacyMode = 'on';
     const privacyToggle = $('privacyToggle');
     const adBlockToggle = $('adBlockToggle');
-    let adBlockMode = localStorage.getItem('indoogleAdBlockMode');
-    if(adBlockMode === null) adBlockMode = 'on';
+    let adBlockMode = 'on';
 
     const TRACKER_HOSTS = [
       'doubleclick.net','googlesyndication.com','googleadservices.com','adservice.google.com','pagead2.googlesyndication.com',
@@ -1060,12 +1063,11 @@
     }
     function setAdBlock(on){
       adBlockMode = on ? 'on' : 'off';
-      localStorage.setItem('indoogleAdBlockMode', adBlockMode);
       if(adBlockToggle) adBlockToggle.checked = on;
       const note = $('adBlockText');
       if(note){
         note.innerHTML = on
-          ? '<i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking ke liye real browser extension/app chahiye.'
+          ? '<i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking aur Chrome/Google App history hide karne ke liye Incognito/real private browser chahiye.'
           : '<i class="fa-solid fa-circle-info"></i><strong>Ad Block OFF:</strong> Ads/tracker filter disabled hai.';
       }
       if(on) removeAdsFromPage();
@@ -1076,20 +1078,19 @@
       privacyToggle.checked = on;
       $('statusPill').className = 'status-pill' + (on ? '' : ' off');
       $('statusPill').innerHTML = on ? '<i class="fa-solid fa-shield"></i> Privacy Mode ON' : '<i class="fa-solid fa-database"></i> Normal Mode Active';
-      $('privacyText').textContent = on ? 'ON: Indoogle local history save nahi hogi. DuckDuckGo default search rahega.' : 'OFF: history aur theme/settings save honge.';
+      $('privacyText').textContent = on ? 'ON: Indoogle local history/storage save nahi hogi. Note: Chrome/Google App ki browser history ko website control nahi kar sakti.' : 'OFF: history aur theme/settings save honge.';
       const privacyStatEl = $('privacyStat'); if(privacyStatEl) privacyStatEl.textContent = on ? 'ON' : 'OFF';
       if(adBlockToggle) adBlockToggle.checked = isAdBlockOn();
       const adNote = $('adBlockText');
       if(adNote){
         adNote.innerHTML = isAdBlockOn()
-          ? '<i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking ke liye real browser extension/app chahiye.'
+          ? '<i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking aur Chrome/Google App history hide karne ke liye Incognito/real private browser chahiye.'
           : '<i class="fa-solid fa-circle-info"></i><strong>Ad Block OFF:</strong> Ads/tracker filter disabled hai.';
       }
       renderHistory();
     }
     function setPrivacy(on){
       privacyMode = on ? 'on' : 'off';
-      localStorage.setItem('indooglePrivacyMode', privacyMode);
       if(on){ clearHistory(); clearPrivateData(false); toast('Privacy Mode ON'); }
       else toast('Normal Mode Active');
       updatePrivacyUI();
@@ -1098,22 +1099,50 @@
     if(adBlockToggle) adBlockToggle.addEventListener('change', e => setAdBlock(e.target.checked));
     $('privacyTopBtn').addEventListener('click', () => { setPrivacy(!isPrivacyOn()); });
 
-    function getHistory(){ try{return JSON.parse(localStorage.getItem('indoogleSearchHistory')||'[]')}catch(e){return []} }
-    function saveSearch(q){ if(isPrivacyOn()) return; let h=getHistory().filter(x=>x.toLowerCase()!==q.toLowerCase()); h.unshift(q); h=h.slice(0,10); localStorage.setItem('indoogleSearchHistory', JSON.stringify(h)); renderHistory(); }
-    function clearHistory(){ localStorage.removeItem('indoogleSearchHistory'); renderHistory(); }
+    function getHistory(){
+      if(isPrivacyOn()) return [];
+      try{return JSON.parse(localStorage.getItem('indoogleSearchHistory')||'[]')}catch(e){return []}
+    }
+    function saveSearch(q){
+      if(isPrivacyOn()) { clearHistory(); return; }
+      let h=getHistory().filter(x=>x.toLowerCase()!==q.toLowerCase());
+      h.unshift(q); h=h.slice(0,10);
+      localStorage.setItem('indoogleSearchHistory', JSON.stringify(h));
+      renderHistory();
+    }
+    function clearHistory(){
+      localStorage.removeItem('indoogleSearchHistory');
+      sessionStorage.removeItem('indoogleSearchHistory');
+      renderHistory();
+    }
     function renderHistory(){
       const h = getHistory(); const historyCountEl = $('historyCount'); if(historyCountEl) historyCountEl.textContent = h.length; const box=$('historyList');
-      if(isPrivacyOn()){ box.innerHTML = '<div style="color:var(--muted);font-weight:800;font-size:.82rem;line-height:1.5">Privacy ON hai, Indoogle local history save nahi hogi. Google app history se bachne ke liye private search use ho raha hai.</div>'; return; }
+      if(isPrivacyOn()){ box.innerHTML = '<div style="color:var(--muted);font-weight:800;font-size:.82rem;line-height:1.5">Privacy ON hai: Indoogle local history/storage save nahi hogi. Chrome/Google App history avoid karne ke liye Incognito/Private tab use karein.</div>'; return; }
       box.innerHTML = h.length ? h.map(q=>`<button class="history-chip" onclick="searchWeb('${q.replace(/'/g,"\\'")}')"><i class="fa-solid fa-clock-rotate-left"></i> ${q}</button>`).join('') : '<div style="color:var(--muted);font-weight:800;font-size:.82rem">No saved search yet</div>';
     }
     $('clearHistoryBtn').addEventListener('click', ()=>{ clearHistory(); toast('History cleared'); });
     async function clearPrivateData(show=true){
-      sessionStorage.clear();
-      if('caches' in window){ const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); }
-      if(show) toast('Private data cleared');
+      try{
+        localStorage.removeItem('indoogleSearchHistory');
+        localStorage.removeItem('indoogleTheme');
+        localStorage.removeItem('indooglePrivacyMode');
+        localStorage.removeItem('indoogleAdBlockMode');
+        sessionStorage.clear();
+        if('caches' in window){ const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); }
+        if(indexedDB && indexedDB.databases){
+          const dbs = await indexedDB.databases();
+          await Promise.all(dbs.map(db => db.name ? new Promise(resolve=>{
+            const req = indexedDB.deleteDatabase(db.name);
+            req.onsuccess = req.onerror = req.onblocked = resolve;
+          }) : Promise.resolve()));
+        }
+      }catch(e){}
+      renderHistory();
+      if(show) toast('Indoogle private data cleared');
     }
     $('clearDataBtn').addEventListener('click', ()=>clearPrivateData(true));
-    window.addEventListener('beforeunload', ()=>{ if(isPrivacyOn()){ sessionStorage.clear(); } });
+    window.addEventListener('pagehide', ()=>{ if(isPrivacyOn()){ clearPrivateData(false); } });
+    window.addEventListener('beforeunload', ()=>{ if(isPrivacyOn()){ sessionStorage.clear(); localStorage.removeItem('indoogleSearchHistory'); } });
 
     function populateEngines(){
       const topSelect = $('topEngine');
@@ -1186,7 +1215,6 @@
     function setTheme(light){
       document.body.classList.toggle('light', light);
       $('themeBtn').innerHTML = light ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-      if(!isPrivacyOn()) localStorage.setItem('indoogleTheme', light ? 'light' : 'dark');
     }
     // Default open: Light Mode (no automatic dark mode on browser open)
     // Dark mode can still be enabled manually from the theme button.
