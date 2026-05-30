@@ -1,20 +1,18 @@
 // =============================
-//  INDOOGLE UNIVERSAL PWA SERVICE WORKER
-//  Works on GitHub Pages + Netlify
+// INDOOGLE UNIVERSAL PWA SERVICE WORKER
+// Works on GitHub Pages + Netlify
 // =============================
 
-const CACHE_NAME = "indoogle-cache-v3";
+const CACHE_NAME = "indoogle-cache-v4";
 
-// 🔥 Auto detect GitHub Pages base path
-// GitHub Pages URL example:
-// https://username.github.io/Indoogle-/
-// Netlify URL example:
-// https://your-site.netlify.app/
+// GitHub Pages base path auto detect
+// Example GitHub: https://username.github.io/Indoogle-/
+// Example Netlify: https://indoogle.netlify.app/
 const BASE = self.location.hostname.includes("github.io")
   ? "/Indoogle-"
   : "";
 
-// ✅ App shell files
+// App shell files
 const PRECACHE_ASSETS = [
   `${BASE}/`,
   `${BASE}/index.html`,
@@ -31,9 +29,9 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(PRECACHE_ASSETS);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(PRECACHE_ASSETS))
+      .catch(error => console.error("Precache failed:", error))
   );
 });
 
@@ -62,38 +60,37 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const request = event.request;
 
-  // Ignore non-http requests
+  // Only handle http/https
   if (!request.url.startsWith("http")) return;
 
-  // Ignore chrome-extension / browser internal requests
-  if (request.url.startsWith("chrome-extension://")) return;
-
-  // Only handle GET requests
+  // Only GET request cache karo
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
 
-  // Optional: avoid caching Google search result pages
+  // External Google/Firebase requests ko cache mat karo
   if (
     url.hostname.includes("google.com") ||
     url.hostname.includes("gstatic.com") ||
     url.hostname.includes("googleapis.com") ||
     url.hostname.includes("firebaseapp.com") ||
-    url.hostname.includes("firebaseio.com")
+    url.hostname.includes("firebaseio.com") ||
+    url.hostname.includes("fontawesome.com") ||
+    url.hostname.includes("cloudflare.com")
   ) {
     event.respondWith(fetch(request));
     return;
   }
 
-  // HTML pages → Network First
+  // HTML pages: Network First
   if (request.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
       fetch(request)
         .then(response => {
-          const responseClone = response.clone();
+          const clone = response.clone();
 
           caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, responseClone);
+            cache.put(request, clone);
           });
 
           return response;
@@ -108,7 +105,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // Static files → Cache First
+  // Static assets: Cache First
   event.respondWith(
     caches.match(request).then(cachedResponse => {
       if (cachedResponse) {
@@ -117,21 +114,19 @@ self.addEventListener("fetch", event => {
 
       return fetch(request)
         .then(response => {
-          // Do not cache bad responses
           if (!response || response.status !== 200) {
             return response;
           }
 
-          const responseClone = response.clone();
+          const clone = response.clone();
 
           caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, responseClone);
+            cache.put(request, clone);
           });
 
           return response;
         })
         .catch(() => {
-          // Offline fallback for images/icons if needed
           if (request.destination === "image") {
             return caches.match(`${BASE}/logo.png`);
           }
