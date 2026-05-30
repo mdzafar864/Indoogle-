@@ -51,7 +51,7 @@
     .shield-panel{border:1px solid var(--border);border-radius:32px;padding:24px;background:var(--panel);min-height:100%}.shield-big{width:90px;height:90px;border-radius:28px;background:linear-gradient(135deg,var(--orange),var(--orange2));display:grid;place-items:center;font-size:2.4rem;color:white;box-shadow:0 20px 40px rgba(251,84,43,.32);margin-bottom:18px}.shield-panel h3{font-size:1.55rem;margin-bottom:8px}.shield-panel p{color:var(--muted);line-height:1.6;font-weight:600}.privacy-list{margin-top:18px;display:grid;gap:10px}.privacy-list div{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);background:rgba(255,255,255,.05);border-radius:16px;font-weight:800}.privacy-list i{color:var(--green)}
     .shortcuts-wrap{margin-top:26px}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.section-head h3{font-size:1.1rem}.section-head span{font-size:.82rem;color:var(--muted);font-weight:800}.shortcuts{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}.shortcut{text-decoration:none;color:var(--text);border:1px solid var(--border);background:var(--card);border-radius:22px;padding:17px 10px;text-align:center;transition:.22s;min-height:112px}.shortcut:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(0,0,0,.16);border-color:rgba(251,84,43,.4)}.shortcut-icon{width:54px;height:54px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;background:rgba(255,255,255,.10);font-size:1.6rem}.shortcut span{font-weight:900;font-size:.84rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .history-list{max-height:190px;overflow:auto;display:grid;gap:8px;margin-top:10px}.history-chip{border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:9px 10px;color:var(--text);font-weight:700;font-size:.82rem;cursor:pointer;text-align:left}.small-btn{margin-top:10px;width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px;font-weight:900;cursor:pointer}.small-btn.danger{color:#ffb4a7}
-    footer{padding:22px;text-align:center;color:var(--muted);font-weight:700;border-top:1px solid var(--border);background:rgba(255,255,255,.04)}
+    footer{padding:12px 16px;text-align:center;color:var(--muted);font-weight:700;font-size:.78rem;line-height:1.35;border-top:1px solid var(--border);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px}
     .toast{position:fixed;right:18px;bottom:18px;background:var(--cardSolid);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);font-weight:800;transform:translateY(30px);opacity:0;pointer-events:none;transition:.24s;z-index:50}.toast.show{transform:translateY(0);opacity:1}
 
     /* Old Indoogle-style centered logo + slogan */
@@ -401,7 +401,7 @@
       .shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
       .shortcut{min-height:96px;border-radius:18px;padding:13px 8px;}
       .shortcut-icon{width:46px;height:46px;border-radius:15px;font-size:1.35rem;}
-      footer{font-size:.78rem;padding:16px 10px;line-height:1.45;}
+      footer{font-size:.70rem!important;padding:10px 8px!important;line-height:1.3!important;min-height:38px;}
       .toast{left:12px;right:12px;bottom:12px;text-align:center;}
     }
 
@@ -752,6 +752,52 @@
       transform:translateY(-8px) scale(1.05);
     }
 
+  
+
+    /* Search engine selector in quick/search bars only */
+    .engine-select{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      border-radius:999px;
+      height:36px;
+      padding:0 12px;
+      font-weight:900;
+      outline:0;
+      cursor:pointer;
+      max-width:150px;
+    }
+    body.light .engine-select{background:#fff;color:#111827;}
+    .hero-search .engine-select{height:46px;min-width:150px;}
+    .engine-select option{color:#111827;background:#fff;}
+    @media(max-width:620px){
+      .engine-select{max-width:108px;height:34px;font-size:.76rem;padding:0 8px;}
+      .hero-search .engine-select{grid-column:1 / -1;width:100%;max-width:100%;height:42px;border-radius:16px;}
+    }
+
+
+    /* Brave-style basic ad/tracker protection for Indoogle page only */
+    .adblock-note{
+      margin-top:10px;
+      padding:10px 11px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(34,197,94,.10);
+      color:var(--muted);
+      font-weight:800;
+      font-size:.78rem;
+      line-height:1.45;
+    }
+    .adblock-note strong{color:var(--text)}
+    .adblock-note i{color:var(--green);margin-right:6px}
+    [id*="ad" i], [class*="ad-" i], [class*=" ads" i], [class*="advert" i],
+    [class*="sponsor" i], [id*="sponsor" i], [aria-label*="advert" i],
+    iframe[src*="doubleclick"], iframe[src*="googlesyndication"], iframe[src*="adservice"],
+    iframe[src*="adsystem"], iframe[src*="taboola"], iframe[src*="outbrain"]{
+      display:none!important;
+      visibility:hidden!important;
+    }
+
   </style>
 </head>
 <body class="light">
@@ -766,7 +812,8 @@
         </div>
         <form class="omnibox" id="topSearchForm">
           <div class="shield" title="Indoogle Shield"><i class="fa-solid fa-shield-halved"></i></div>
-          <input id="topQuery" type="text" autocomplete="off" placeholder="Search or type a web address">
+          <input id="topQuery" type="text" autocomplete="off" placeholder="Search privately or type a web address">
+          <select class="engine-select" id="topEngine" title="Search Engine"></select>
           <button class="go-btn" type="submit">Go</button>
         </form>
         <div class="right-actions">
@@ -795,7 +842,9 @@
           <div class="privacy-card">
             <span id="statusPill" class="status-pill"><i class="fa-solid fa-shield"></i> Privacy Mode ON</span>
             <div class="toggle-row"><span>Privacy Mode</span><label class="switch"><input type="checkbox" id="privacyToggle" checked><span class="slider"></span></label></div>
-            <p id="privacyText" style="margin-top:10px;color:var(--muted);font-weight:700;font-size:.82rem;line-height:1.5">ON: history/settings save nahi honge.</p>
+            <div class="toggle-row"><span>Ad Block Basic</span><label class="switch"><input type="checkbox" id="adBlockToggle" checked><span class="slider"></span></label></div>
+            <p id="privacyText" style="margin-top:10px;color:var(--muted);font-weight:700;font-size:.82rem;line-height:1.5">ON: Indoogle local history save nahi hogi. DuckDuckGo default search rahega.</p>
+            <div class="adblock-note" id="adBlockText"><i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking ke liye real browser extension/app chahiye.</div>
             <div class="history-list" id="historyList"></div>
             <button class="small-btn" id="clearHistoryBtn"><i class="fa-solid fa-broom"></i> Clear History</button>
             <button class="small-btn danger" id="clearDataBtn"><i class="fa-solid fa-trash"></i> Clear Private Data</button>
@@ -803,7 +852,7 @@
         </div>
         <div class="side-section">
           <div class="side-title">Quick Tools</div>
-          <button class="side-item" onclick="openSame('https://duckduckgo.com')"><i class="fa-solid fa-lock"></i> Private Search</button>
+          <button class="side-item" onclick="openSame('https://duckduckgo.com')"><i class="fa-solid fa-lock"></i> DuckDuckGo</button>
           <button class="side-item" onclick="openSame('https://news.google.com')"><i class="fa-solid fa-newspaper"></i> News</button>
           <button class="side-item" onclick="openSame('https://mail.google.com')"><i class="fa-solid fa-envelope"></i> Gmail</button>
         </div>
@@ -821,7 +870,8 @@
 
             <form class="hero-search old-search" id="heroSearchForm">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <input id="heroQuery" type="text" autocomplete="off" placeholder="Search anything on the web...">
+              <input id="heroQuery" type="text" autocomplete="off" placeholder="Search privately on the web...">
+              <select class="engine-select" id="heroEngine" title="Search Engine"></select>
               <button type="submit">Search</button>
             </form>
           </div>
@@ -941,19 +991,100 @@
     }
     animateSlogan();
 
+    const ENGINES = {
+      duckduckgo:{name:'DuckDuckGo', tag:'Default Private', icon:'DDG', url:q=>'https://duckduckgo.com/?q='+encodeURIComponent(q)+'&kp=-1&kac=-1&kz=-1'},
+      brave:{name:'Brave Search', tag:'Independent Index', icon:'BR', url:q=>'https://search.brave.com/search?q='+encodeURIComponent(q)},
+      startpage:{name:'Startpage', tag:'Google results private', icon:'SP', url:q=>'https://www.startpage.com/sp/search?query='+encodeURIComponent(q)},
+      qwant:{name:'Qwant', tag:'European search', icon:'QW', url:q=>'https://www.qwant.com/?q='+encodeURIComponent(q)},
+      ecosia:{name:'Ecosia', tag:'Eco search', icon:'EC', url:q=>'https://www.ecosia.org/search?q='+encodeURIComponent(q)},
+      mojeek:{name:'Mojeek', tag:'Own crawler', icon:'MJ', url:q=>'https://www.mojeek.com/search?q='+encodeURIComponent(q)},
+      swisscows:{name:'Swisscows', tag:'Family friendly', icon:'SC', url:q=>'https://swisscows.com/en/web?query='+encodeURIComponent(q)},
+      metager:{name:'MetaGer', tag:'Meta search', icon:'MG', url:q=>'https://metager.org/meta/meta.ger3?eingabe='+encodeURIComponent(q)},
+      presearch:{name:'Presearch', tag:'Community search', icon:'PR', url:q=>'https://presearch.com/search?q='+encodeURIComponent(q)},
+      yep:{name:'Yep', tag:'Ahrefs search', icon:'YP', url:q=>'https://yep.com/web?q='+encodeURIComponent(q)},
+      you:{name:'You.com', tag:'AI search', icon:'YOU', url:q=>'https://you.com/search?q='+encodeURIComponent(q)},
+      perplexity:{name:'Perplexity', tag:'Answer engine', icon:'PX', url:q=>'https://www.perplexity.ai/search?q='+encodeURIComponent(q)},
+      kagi:{name:'Kagi', tag:'Premium search', icon:'KG', url:q=>'https://kagi.com/search?q='+encodeURIComponent(q)},
+      searxng:{name:'SearXNG', tag:'Open metasearch', icon:'SX', url:q=>'https://searx.space/search?q='+encodeURIComponent(q)},
+      bing:{name:'Bing', tag:'Microsoft', icon:'BI', url:q=>'https://www.bing.com/search?q='+encodeURIComponent(q)},
+      yahoo:{name:'Yahoo', tag:'Web search', icon:'YH', url:q=>'https://search.yahoo.com/search?p='+encodeURIComponent(q)},
+      google:{name:'Google', tag:'Only if selected', icon:'G', url:q=>'https://www.google.com/search?q='+encodeURIComponent(q)},
+      yandex:{name:'Yandex', tag:'Global search', icon:'YA', url:q=>'https://yandex.com/search/?text='+encodeURIComponent(q)},
+      baidu:{name:'Baidu', tag:'China search', icon:'BD', url:q=>'https://www.baidu.com/s?wd='+encodeURIComponent(q)},
+      internetarchive:{name:'Archive Search', tag:'Old web/pages', icon:'AR', url:q=>'https://archive.org/search?query='+encodeURIComponent(q)},
+      wikipedia:{name:'Wikipedia', tag:'Knowledge', icon:'W', url:q=>'https://en.wikipedia.org/w/index.php?search='+encodeURIComponent(q)},
+      reddit:{name:'Reddit Search', tag:'Discussions', icon:'RD', url:q=>'https://www.reddit.com/search/?q='+encodeURIComponent(q)},
+      github:{name:'GitHub Search', tag:'Code', icon:'GH', url:q=>'https://github.com/search?q='+encodeURIComponent(q)},
+      alternativeto:{name:'AlternativeTo', tag:'Software alternatives', icon:'AT', url:q=>'https://alternativeto.net/browse/search/?q='+encodeURIComponent(q)}
+    };
+    const ENGINE_ORDER = ['duckduckgo','brave','startpage','qwant','ecosia','mojeek','swisscows','metager','presearch','yep','you','perplexity','kagi','searxng','bing','yahoo','google','yandex','baidu','internetarchive','wikipedia','reddit','github','alternativeto'];
+    let activeEngine = 'duckduckgo';
+
     let privacyMode = localStorage.getItem('indooglePrivacyMode');
     if(privacyMode === null) privacyMode = 'on';
     const privacyToggle = $('privacyToggle');
+    const adBlockToggle = $('adBlockToggle');
+    let adBlockMode = localStorage.getItem('indoogleAdBlockMode');
+    if(adBlockMode === null) adBlockMode = 'on';
+
+    const TRACKER_HOSTS = [
+      'doubleclick.net','googlesyndication.com','googleadservices.com','adservice.google.com','pagead2.googlesyndication.com',
+      'adsystem.com','adnxs.com','adsrvr.org','taboola.com','outbrain.com','criteo.com','scorecardresearch.com',
+      'quantserve.com','moatads.com','zedo.com','media.net','mgid.com','revcontent.com','popads.net','propellerads.com',
+      'facebook.com/tr','connect.facebook.net','analytics.google.com','googletagmanager.com'
+    ];
+    const AD_SELECTORS = [
+      'iframe[src*="doubleclick"]','iframe[src*="googlesyndication"]','iframe[src*="googleadservices"]','iframe[src*="adservice"]',
+      'iframe[src*="taboola"]','iframe[src*="outbrain"]','iframe[src*="criteo"]','script[src*="doubleclick"]','script[src*="googlesyndication"]',
+      'script[src*="googletagmanager"]','script[src*="analytics"]','[class*="ad-"]','[class*="ads-"]','[class*="advert"]',
+      '[class*="sponsor"]','[id*="ad-"]','[id*="ads-"]','[id*="sponsor"]'
+    ];
 
     function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
     function isPrivacyOn(){ return privacyMode === 'on'; }
+    function isAdBlockOn(){ return adBlockMode === 'on'; }
+    function isBlockedUrl(url){
+      try{
+        const u = new URL(url, location.href);
+        const full = (u.hostname + u.pathname).toLowerCase();
+        return TRACKER_HOSTS.some(host => full.includes(host));
+      }catch(e){ return false; }
+    }
+    function removeAdsFromPage(){
+      if(!isAdBlockOn()) return;
+      AD_SELECTORS.forEach(sel => document.querySelectorAll(sel).forEach(el => el.remove()));
+      document.querySelectorAll('iframe,script,img,link,a').forEach(el=>{
+        const src = el.src || el.href || '';
+        if(src && isBlockedUrl(src)) el.remove();
+      });
+    }
+    function setAdBlock(on){
+      adBlockMode = on ? 'on' : 'off';
+      localStorage.setItem('indoogleAdBlockMode', adBlockMode);
+      if(adBlockToggle) adBlockToggle.checked = on;
+      const note = $('adBlockText');
+      if(note){
+        note.innerHTML = on
+          ? '<i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking ke liye real browser extension/app chahiye.'
+          : '<i class="fa-solid fa-circle-info"></i><strong>Ad Block OFF:</strong> Ads/tracker filter disabled hai.';
+      }
+      if(on) removeAdsFromPage();
+      toast(on ? 'Ad Block Basic ON' : 'Ad Block OFF');
+    }
     function updatePrivacyUI(){
       const on = isPrivacyOn();
       privacyToggle.checked = on;
       $('statusPill').className = 'status-pill' + (on ? '' : ' off');
       $('statusPill').innerHTML = on ? '<i class="fa-solid fa-shield"></i> Privacy Mode ON' : '<i class="fa-solid fa-database"></i> Normal Mode Active';
-      $('privacyText').textContent = on ? 'ON: history/settings save nahi honge.' : 'OFF: history aur theme/settings save honge.';
+      $('privacyText').textContent = on ? 'ON: Indoogle local history save nahi hogi. DuckDuckGo default search rahega.' : 'OFF: history aur theme/settings save honge.';
       const privacyStatEl = $('privacyStat'); if(privacyStatEl) privacyStatEl.textContent = on ? 'ON' : 'OFF';
+      if(adBlockToggle) adBlockToggle.checked = isAdBlockOn();
+      const adNote = $('adBlockText');
+      if(adNote){
+        adNote.innerHTML = isAdBlockOn()
+          ? '<i class="fa-solid fa-ban"></i><strong>Ad Block Basic ON:</strong> Indoogle page ke ads/trackers block honge. External websites par full Brave-level blocking ke liye real browser extension/app chahiye.'
+          : '<i class="fa-solid fa-circle-info"></i><strong>Ad Block OFF:</strong> Ads/tracker filter disabled hai.';
+      }
       renderHistory();
     }
     function setPrivacy(on){
@@ -964,6 +1095,7 @@
       updatePrivacyUI();
     }
     privacyToggle.addEventListener('change', e => setPrivacy(e.target.checked));
+    if(adBlockToggle) adBlockToggle.addEventListener('change', e => setAdBlock(e.target.checked));
     $('privacyTopBtn').addEventListener('click', () => { setPrivacy(!isPrivacyOn()); });
 
     function getHistory(){ try{return JSON.parse(localStorage.getItem('indoogleSearchHistory')||'[]')}catch(e){return []} }
@@ -971,7 +1103,7 @@
     function clearHistory(){ localStorage.removeItem('indoogleSearchHistory'); renderHistory(); }
     function renderHistory(){
       const h = getHistory(); const historyCountEl = $('historyCount'); if(historyCountEl) historyCountEl.textContent = h.length; const box=$('historyList');
-      if(isPrivacyOn()){ box.innerHTML = '<div style="color:var(--muted);font-weight:800;font-size:.82rem;line-height:1.5">Privacy ON hai, search history save nahi hogi.</div>'; return; }
+      if(isPrivacyOn()){ box.innerHTML = '<div style="color:var(--muted);font-weight:800;font-size:.82rem;line-height:1.5">Privacy ON hai, Indoogle local history save nahi hogi. Google app history se bachne ke liye private search use ho raha hai.</div>'; return; }
       box.innerHTML = h.length ? h.map(q=>`<button class="history-chip" onclick="searchWeb('${q.replace(/'/g,"\\'")}')"><i class="fa-solid fa-clock-rotate-left"></i> ${q}</button>`).join('') : '<div style="color:var(--muted);font-weight:800;font-size:.82rem">No saved search yet</div>';
     }
     $('clearHistoryBtn').addEventListener('click', ()=>{ clearHistory(); toast('History cleared'); });
@@ -983,18 +1115,73 @@
     $('clearDataBtn').addEventListener('click', ()=>clearPrivateData(true));
     window.addEventListener('beforeunload', ()=>{ if(isPrivacyOn()){ sessionStorage.clear(); } });
 
+    function populateEngines(){
+      const topSelect = $('topEngine');
+      const heroSelect = $('heroEngine');
+      const grid = $('engineGrid');
+      const options = ENGINE_ORDER.map(key => `<option value="${key}">${ENGINES[key].name}</option>`).join('');
+      if(topSelect) topSelect.innerHTML = options;
+      if(heroSelect) heroSelect.innerHTML = options;
+      if(grid){
+        grid.innerHTML = ENGINE_ORDER.map(key => {
+          const e = ENGINES[key];
+          return `<button class="engine-card" type="button" data-engine="${key}" onclick="setActiveEngine('${key}', true)">
+            <div class="engine-avatar">${e.icon}</div>
+            <strong>${e.name}</strong>
+            <small>${e.tag}</small>
+          </button>`;
+        }).join('');
+      }
+      setActiveEngine('duckduckgo', false);
+      [topSelect, heroSelect].forEach(sel=>{
+        if(!sel) return;
+        sel.addEventListener('change', e=>setActiveEngine(e.target.value, true));
+      });
+    }
+    function setActiveEngine(key, showToast){
+      if(!ENGINES[key]) key = 'duckduckgo';
+      activeEngine = key;
+      const topSelect = $('topEngine');
+      const heroSelect = $('heroEngine');
+      if(topSelect) topSelect.value = key;
+      if(heroSelect) heroSelect.value = key;
+      document.querySelectorAll('.engine-card').forEach(card=>card.classList.toggle('active-engine', card.dataset.engine === key));
+      if(showToast) toast(ENGINES[key].name + ' selected');
+    }
+    populateEngines();
+
     function normalizeTarget(q){
       q = q.trim();
       if(!q) return '';
       const looksUrl = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/.*)?$/i.test(q);
-      if(looksUrl) return q.startsWith('http') ? q : 'https://' + q;
-      return 'https://www.google.com/search?q=' + encodeURIComponent(q);
+      if(looksUrl){
+        const directUrl = q.startsWith('http') ? q : 'https://' + q;
+        if(isAdBlockOn() && isBlockedUrl(directUrl)){
+          toast('Blocked ad/tracker URL');
+          return '';
+        }
+        return directUrl;
+      }
+      const engine = ENGINES[activeEngine] || ENGINES.duckduckgo;
+      return engine.url(q);
     }
-    function searchWeb(q){ const target=normalizeTarget(q); if(!target) return; saveSearch(q.trim()); window.location.href = target; }
+    function searchWeb(q){
+      const target=normalizeTarget(q);
+      if(!target) return;
+      saveSearch(q.trim());
+      // replace() use karne se Indoogle page ke andar extra back-history create nahi hoti.
+      window.location.replace(target);
+    }
     function bindSearch(formId,inputId){ $(formId).addEventListener('submit', e=>{ e.preventDefault(); searchWeb($(inputId).value); }); }
     bindSearch('topSearchForm','topQuery'); bindSearch('heroSearchForm','heroQuery');
     function focusSearch(){ $('heroQuery').focus(); if(innerWidth<=980) $('sidebar').classList.remove('open'); }
-    function openSame(url){ window.location.href=url; }
+    function openSame(url){
+      if(isAdBlockOn() && isBlockedUrl(url)){
+        toast('Blocked ad/tracker URL');
+        return;
+      }
+      window.location.replace(url);
+    }
 
     function setTheme(light){
       document.body.classList.toggle('light', light);
@@ -1009,6 +1196,19 @@
     $('shareBtn').addEventListener('click', async()=>{ try{ await navigator.clipboard.writeText(location.href); toast('Link copied'); }catch(e){ toast('Copy failed'); } });
     $('menuToggle').addEventListener('click', ()=>$('sidebar').classList.toggle('open'));
     document.addEventListener('click', e=>{ if(innerWidth<=980 && $('sidebar').classList.contains('open') && !e.target.closest('#sidebar') && !e.target.closest('#menuToggle')) $('sidebar').classList.remove('open'); });
+
+
+    // All external shortcut/article links same tab me privacy-safe navigation se open honge.
+    document.querySelectorAll('a[href]').forEach(a=>{
+      a.setAttribute('rel','noreferrer noopener');
+      a.addEventListener('click', e=>{
+        const href = a.getAttribute('href');
+        if(!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+        e.preventDefault();
+        window.location.replace(href);
+      });
+    });
+
     updatePrivacyUI();
 
     if('serviceWorker' in navigator){
