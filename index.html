@@ -248,18 +248,9 @@ if ("serviceWorker" in navigator) {
         }
 
         /* LOCK POPUP */
+        /* Login popup disabled: login is optional */
         #forceLoginPopup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.75);
-            display: none;
-            z-index: 2000;
-            backdrop-filter: blur(4px);
-            text-align: center;
-            padding-top: 120px;
+            display: none !important;
         }
 
         /* Dark mode theming */
@@ -458,16 +449,15 @@ if ("serviceWorker" in navigator) {
             signOut(auth).then(() => updateUI(null));
         };
 
-        // UI Update
+        // UI Update - Login optional, no home screen lock
         function updateUI(user) {
             if (user) {
-                profilePic.src = user.photoURL;
-                profileName.innerText = user.displayName;
-                profileEmail.innerText = user.email;
-                
+                profilePic.src = user.photoURL || "https://i.ibb.co/8jW3P0b/default-user.png";
+                profileName.innerText = user.displayName || "User";
+                profileEmail.innerText = user.email || "Logged In";
+
                 loginBtn.style.display = "none";
                 logoutBtn.style.display = "block";
-                forcePopup.style.display = "none";
             } else {
                 profilePic.src = "https://i.ibb.co/8jW3P0b/default-user.png";
                 profileName.innerText = "Guest User";
@@ -475,20 +465,14 @@ if ("serviceWorker" in navigator) {
 
                 loginBtn.style.display = "block";
                 logoutBtn.style.display = "none";
-
-                forcePopup.style.display = "block";  // Lock again
             }
+
+            // Always keep popup hidden so home/search works without login
+            forcePopup.style.display = "none";
         }
 
-        // Auto check login
+        // Auto check login, but do not block guest users
         onAuthStateChanged(auth, user => updateUI(user));
-
-        // Show lock popup after 10 sec if not logged in
-        setTimeout(() => {
-            if (!auth.currentUser) {
-                forcePopup.style.display = "block";
-            }
-        }, 100000);
 
         // MENU ITEMS FUNCTIONALITY
         const menuItems = document.querySelectorAll(".menu-item");
