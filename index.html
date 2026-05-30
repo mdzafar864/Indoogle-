@@ -29,9 +29,9 @@
     body{background:radial-gradient(circle at 18% 12%, rgba(251,84,43,.32), transparent 28%),radial-gradient(circle at 82% 2%, rgba(59,130,246,.26), transparent 28%),linear-gradient(140deg,var(--bg),var(--bg2));color:var(--text);overflow-x:hidden}
     body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(to bottom,black,transparent 82%);pointer-events:none}
     .browser-shell{width:min(1180px,94vw);margin:18px auto 28px;border:1px solid var(--border);border-radius:28px;overflow:hidden;background:rgba(255,255,255,.06);box-shadow:var(--shadow);backdrop-filter:blur(22px)}
-    .top-chrome{background:rgba(7,10,22,.72);border-bottom:1px solid var(--border);padding:10px 12px 12px;position:sticky;top:0;z-index:20;backdrop-filter:blur(22px)}
+    .top-chrome{background:rgba(7,10,22,.72);border-bottom:1px solid var(--border);padding:12px;position:sticky;top:0;z-index:20;backdrop-filter:blur(22px)}
     body.light .top-chrome{background:rgba(255,255,255,.84)}
-    .tabs-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+    .tabs-row{display:none!important}
     .window-dots{display:flex;gap:7px;padding:0 8px 0 2px}.dot{width:12px;height:12px;border-radius:50%}.dot.red{background:#ff5f57}.dot.yellow{background:#febc2e}.dot.green{background:#28c840}
     .tab{height:36px;min-width:210px;max-width:250px;padding:0 14px;display:flex;align-items:center;gap:9px;background:var(--panel2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-weight:700;font-size:.88rem}.tab i:first-child{color:#38bdf8}.tab .close{margin-left:auto;color:var(--muted)}
     .plus-tab,.icon-btn{width:38px;height:38px;border-radius:14px;border:1px solid var(--border);background:var(--panel);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:.2s}.plus-tab:hover,.icon-btn:hover{transform:translateY(-1px);background:var(--panel2)}
@@ -437,16 +437,326 @@
       .shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));}
     }
 
+
+    /* Clean home screen after removing Indoogle Shield panel */
+    .hero{
+      grid-template-columns:1fr!important;
+      justify-items:center;
+      align-items:center;
+      max-width:980px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .hero-card.old-brand-hero{
+      width:100%;
+      max-width:900px;
+      margin:0 auto;
+    }
+    .old-search{
+      margin-left:auto!important;
+      margin-right:auto!important;
+    }
+    .stats{
+      max-width:760px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    @media(min-width:1440px){
+      .hero{max-width:1080px;}
+      .hero-card.old-brand-hero{max-width:980px;}
+    }
+    @media(min-width:1800px){
+      .hero{max-width:1220px;}
+      .hero-card.old-brand-hero{max-width:1080px;}
+    }
+    @media(max-width:620px){
+      .hero{max-width:100%;}
+      .hero-card.old-brand-hero{max-width:100%;}
+      .shortcuts-wrap{margin-top:22px;}
+    }
+      42%{
+        transform:translate(-50%,-9px) scale(1.06);
+      }
+      68%{
+        transform:translate(-50%,-4px) scale(1.02);
+      }
+    }
+    @media(max-width:620px){
+      .logo-i-dot{
+        width:7px;
+        height:18px;
+        top:24%;
+      }
+      .logo-i-dot::before{
+        width:8px;
+        height:8px;
+        top:-7px;
+      }
+    }
+
+  
+    /* 2026 browser-style Top Sites and Discover Articles */
+    .browser-section-head{
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .browser-section-head > div{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .mini-action{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:.82rem;
+      font-weight:900;
+      text-decoration:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      transition:.22s;
+    }
+    body.light .mini-action{
+      background:#fff;
+    }
+    .mini-action:hover{
+      transform:translateY(-2px);
+      border-color:rgba(251,84,43,.42);
+      box-shadow:0 12px 28px rgba(15,23,42,.12);
+    }
+    .shortcuts-2026{
+      grid-template-columns:repeat(6,minmax(0,1fr));
+    }
+    .shortcut-2026{
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+      min-height:128px;
+      padding:18px 10px 14px;
+      border-radius:26px;
+      background:
+        linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.045));
+      backdrop-filter:blur(18px);
+    }
+    body.light .shortcut-2026{
+      background:linear-gradient(145deg,#ffffff,#f8fafc);
+    }
+    .shortcut-2026::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      padding:1px;
+      background:linear-gradient(135deg,rgba(255,153,51,.65),rgba(59,130,246,.35),rgba(19,136,8,.55));
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      pointer-events:none;
+      opacity:.55;
+    }
+    .shortcut-glow{
+      position:absolute;
+      width:80px;
+      height:80px;
+      border-radius:50%;
+      background:rgba(251,146,60,.18);
+      filter:blur(20px);
+      right:-24px;
+      top:-24px;
+      z-index:-1;
+    }
+    .shortcut-2026:hover{
+      transform:translateY(-7px) scale(1.015);
+      box-shadow:0 22px 48px rgba(15,23,42,.18);
+    }
+    .shortcut-2026 small{
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-weight:800;
+      font-size:.72rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .shortcut-2026 .shortcut-icon{
+      width:58px;
+      height:58px;
+      border-radius:22px;
+      color:#fff!important;
+      box-shadow:0 14px 26px rgba(15,23,42,.18);
+      background:linear-gradient(135deg,#64748b,#111827);
+    }
+    .shortcut-icon.youtube{background:linear-gradient(135deg,#ff0033,#ff6b6b);}
+    .shortcut-icon.google{background:linear-gradient(135deg,#4285f4,#22c55e);}
+    .shortcut-icon.private{background:linear-gradient(135deg,#ff8a00,#fb542b);}
+    .shortcut-icon.amazon{background:linear-gradient(135deg,#ff9900,#111827);}
+    .shortcut-icon.flipkart{background:linear-gradient(135deg,#2874f0,#facc15);}
+    .shortcut-icon.news{background:linear-gradient(135deg,#06b6d4,#2563eb);}
+
+    .discover-wrap{
+      margin-top:28px;
+    }
+    .article-grid{
+      display:grid;
+      grid-template-columns:1.25fr repeat(3,1fr);
+      gap:14px;
+    }
+    .article-card{
+      min-height:250px;
+      border:1px solid var(--border);
+      border-radius:28px;
+      overflow:hidden;
+      text-decoration:none;
+      color:var(--text);
+      background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.045));
+      backdrop-filter:blur(18px);
+      transition:.24s;
+      display:flex;
+      flex-direction:column;
+    }
+    body.light .article-card{
+      background:linear-gradient(145deg,#ffffff,#f8fafc);
+    }
+    .article-card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 22px 50px rgba(15,23,42,.16);
+      border-color:rgba(59,130,246,.35);
+    }
+    .hero-article{
+      grid-row:span 1;
+    }
+    .article-art{
+      min-height:112px;
+      display:grid;
+      place-items:center;
+      font-size:2.2rem;
+      color:white;
+      position:relative;
+      overflow:hidden;
+    }
+    .article-art::after{
+      content:"";
+      position:absolute;
+      inset:auto -20% -55% -20%;
+      height:90%;
+      background:rgba(255,255,255,.22);
+      transform:rotate(-8deg);
+    }
+    .gradient-news{background:linear-gradient(135deg,#ff9933,#2563eb,#138808);}
+    .gradient-tech{background:linear-gradient(135deg,#111827,#06b6d4);}
+    .gradient-business{background:linear-gradient(135deg,#0f766e,#22c55e);}
+    .gradient-sports{background:linear-gradient(135deg,#7c3aed,#f97316);}
+    .article-content{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+    }
+    .article-tag{
+      width:max-content;
+      max-width:100%;
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(59,130,246,.12);
+      color:#60a5fa;
+      font-size:.72rem;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    body.light .article-tag{
+      color:#1d4ed8;
+      background:rgba(29,78,216,.10);
+    }
+    .article-content h4{
+      font-size:1rem;
+      line-height:1.25;
+      letter-spacing:-.02em;
+    }
+    .article-content p{
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.45;
+      font-weight:700;
+    }
+    .hero-article .article-content h4{
+      font-size:1.18rem;
+    }
+
+    @media(max-width:1180px){
+      .shortcuts-2026{grid-template-columns:repeat(3,minmax(0,1fr));}
+      .article-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media(max-width:620px){
+      .browser-section-head{
+        align-items:flex-start;
+      }
+      .mini-action{
+        width:100%;
+        justify-content:center;
+        border-radius:16px;
+      }
+      .shortcuts-2026{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+      .shortcut-2026{
+        min-height:116px;
+        border-radius:22px;
+      }
+      .shortcut-2026 .shortcut-icon{
+        width:50px;
+        height:50px;
+        border-radius:18px;
+      }
+      .article-grid{
+        grid-template-columns:1fr;
+      }
+      .article-card{
+        min-height:auto;
+        border-radius:24px;
+      }
+      .article-art{
+        min-height:96px;
+      }
+    }
+    @media(max-width:340px){
+      .shortcuts-2026{grid-template-columns:1fr;}
+    }
+
+  
+    /* Full logo bounce animation */
+    .logo-bounce{
+      display:block;
+      animation: fullLogoBounce 3s ease-in-out infinite;
+      transform-origin:center;
+      will-change:transform, box-shadow;
+    }
+    @keyframes fullLogoBounce{
+      0%,100%{
+        transform:translateY(0) scale(1);
+      }
+      45%{
+        transform:translateY(-10px) scale(1.04);
+      }
+      70%{
+        transform:translateY(-4px) scale(1.015);
+      }
+    }
+    .logo-bounce:hover{
+      animation-play-state:paused;
+      transform:translateY(-8px) scale(1.05);
+    }
+
   </style>
 </head>
-<body>
+<body class="light">
   <div class="browser-shell">
     <div class="top-chrome">
-      <div class="tabs-row">
-        <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-        <div class="tab"><i class="fa-solid fa-magnifying-glass"></i> Indoogle New Tab <i class="fa-solid fa-xmark close"></i></div>
-        <button class="plus-tab" title="New Tab"><i class="fa-solid fa-plus"></i></button>
-      </div>
       <div class="address-row">
         <div class="nav-controls">
           <button class="icon-btn menu-toggle" id="menuToggle" title="Menu"><i class="fa-solid fa-bars"></i></button>
@@ -503,7 +813,7 @@
         <section class="hero">
           <div class="hero-card old-brand-hero">
             <div class="home-logo-wrap">
-              <img class="home-logo" src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
+              <img class="home-logo logo-bounce" src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
               <div class="made-badge">🇮🇳 Made for Bharat</div>
               <h2 class="old-home-title clean-indoogle-title pro-indoogle-title">Indoogle</h2>
               <div class="slogan old-slogan flag-slogan-clean"><span id="animatedSlogan"></span><span class="cursor"></span></div>
@@ -514,35 +824,103 @@
               <input id="heroQuery" type="text" autocomplete="off" placeholder="Search anything on the web...">
               <button type="submit">Search</button>
             </form>
-
-            <div class="stats">
-              <div class="stat"><strong id="privacyStat">ON</strong><span>Privacy Mode</span></div>
-              <div class="stat"><strong id="historyCount">0</strong><span>Saved Searches</span></div>
-              <div class="stat"><strong>Same</strong><span>Tab Search</span></div>
-            </div>
-          </div>
-          <div class="shield-panel">
-            <div class="shield-big"><i class="fa-solid fa-shield-heart"></i></div>
-            <h3>Indoogle Shield</h3>
-            <p>Browser-style professional interface with optional privacy mode. Privacy ON hone par searches save nahi hoti. Privacy OFF karne par history aur theme settings save ho sakti hain.</p>
-            <div class="privacy-list">
-              <div><span>Search History Control</span><i class="fa-solid fa-check"></i></div>
-              <div><span>Clear Local Data</span><i class="fa-solid fa-check"></i></div>
-              <div><span>Same Tab Results</span><i class="fa-solid fa-check"></i></div>
-              <div><span>Modern Browser UI</span><i class="fa-solid fa-check"></i></div>
-            </div>
           </div>
         </section>
 
         <section class="shortcuts-wrap">
-          <div class="section-head"><h3>Top Sites</h3><span>Browser-like speed dial</span></div>
-          <div class="shortcuts">
-            <a class="shortcut" href="https://youtube.com"><div class="shortcut-icon" style="color:#ff0033"><i class="fab fa-youtube"></i></div><span>YouTube</span></a>
-            <a class="shortcut" href="https://google.com"><div class="shortcut-icon" style="color:#4285f4"><i class="fab fa-google"></i></div><span>Google</span></a>
-            <a class="shortcut" href="https://duckduckgo.com"><div class="shortcut-icon" style="color:#ff8a00"><i class="fa-solid fa-lock"></i></div><span>DuckDuckGo</span></a>
-            <a class="shortcut" href="https://amazon.in"><div class="shortcut-icon" style="color:#ff9900"><i class="fab fa-amazon"></i></div><span>Amazon</span></a>
-            <a class="shortcut" href="https://flipkart.com"><div class="shortcut-icon" style="color:#2874f0"><i class="fa-solid fa-cart-shopping"></i></div><span>Flipkart</span></a>
-            <a class="shortcut" href="https://www.ndtv.com/"><div class="shortcut-icon" style="color:#60a5fa"><i class="fa-solid fa-newspaper"></i></div><span>NDTV</span></a>
+          <div class="section-head browser-section-head">
+            <div>
+              <h3>Top Sites</h3>
+              <span>2026 browser-style speed dial</span>
+            </div>
+            <button class="mini-action" type="button" onclick="focusSearch()"><i class="fa-solid fa-plus"></i> Add Shortcut</button>
+          </div>
+
+          <div class="shortcuts shortcuts-2026">
+            <a class="shortcut shortcut-2026" href="https://youtube.com">
+              <div class="shortcut-glow"></div>
+              <div class="shortcut-icon youtube"><i class="fab fa-youtube"></i></div>
+              <span>YouTube</span>
+              <small>Videos</small>
+            </a>
+            <a class="shortcut shortcut-2026" href="https://google.com">
+              <div class="shortcut-glow"></div>
+              <div class="shortcut-icon google"><i class="fab fa-google"></i></div>
+              <span>Google</span>
+              <small>Search</small>
+            </a>
+            <a class="shortcut shortcut-2026" href="https://duckduckgo.com">
+              <div class="shortcut-glow"></div>
+              <div class="shortcut-icon private"><i class="fa-solid fa-lock"></i></div>
+              <span>DuckDuckGo</span>
+              <small>Private</small>
+            </a>
+            <a class="shortcut shortcut-2026" href="https://amazon.in">
+              <div class="shortcut-glow"></div>
+              <div class="shortcut-icon amazon"><i class="fab fa-amazon"></i></div>
+              <span>Amazon</span>
+              <small>Shopping</small>
+            </a>
+            <a class="shortcut shortcut-2026" href="https://flipkart.com">
+              <div class="shortcut-glow"></div>
+              <div class="shortcut-icon flipkart"><i class="fa-solid fa-cart-shopping"></i></div>
+              <span>Flipkart</span>
+              <small>Deals</small>
+            </a>
+            <a class="shortcut shortcut-2026" href="https://www.ndtv.com/">
+              <div class="shortcut-glow"></div>
+              <div class="shortcut-icon news"><i class="fa-solid fa-newspaper"></i></div>
+              <span>NDTV</span>
+              <small>News</small>
+            </a>
+          </div>
+        </section>
+
+        <section class="discover-wrap">
+          <div class="section-head browser-section-head">
+            <div>
+              <h3>Trending Articles</h3>
+              <span>Browser-style discover feed</span>
+            </div>
+            <a class="mini-action link-action" href="https://news.google.com/topstories?hl=en-IN&gl=IN&ceid=IN:en">View More</a>
+          </div>
+
+          <div class="article-grid">
+            <a class="article-card hero-article" href="https://news.google.com/topstories?hl=en-IN&gl=IN&ceid=IN:en">
+              <div class="article-art gradient-news"><i class="fa-solid fa-globe"></i></div>
+              <div class="article-content">
+                <span class="article-tag">Top Stories</span>
+                <h4>Latest headlines from India and around the world</h4>
+                <p>Open a live news feed similar to Chrome, Firefox and modern browser start pages.</p>
+              </div>
+            </a>
+
+            <a class="article-card" href="https://news.google.com/search?q=technology%20India&hl=en-IN&gl=IN&ceid=IN:en">
+              <div class="article-art gradient-tech"><i class="fa-solid fa-microchip"></i></div>
+              <div class="article-content">
+                <span class="article-tag">Technology</span>
+                <h4>AI, apps, gadgets and digital updates</h4>
+                <p>Trending tech updates in one tap.</p>
+              </div>
+            </a>
+
+            <a class="article-card" href="https://news.google.com/search?q=business%20India&hl=en-IN&gl=IN&ceid=IN:en">
+              <div class="article-art gradient-business"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="article-content">
+                <span class="article-tag">Business</span>
+                <h4>Markets, startups and business news</h4>
+                <p>Daily business highlights for India.</p>
+              </div>
+            </a>
+
+            <a class="article-card" href="https://news.google.com/search?q=sports%20India&hl=en-IN&gl=IN&ceid=IN:en">
+              <div class="article-art gradient-sports"><i class="fa-solid fa-trophy"></i></div>
+              <div class="article-content">
+                <span class="article-tag">Sports</span>
+                <h4>Cricket, football and sports trends</h4>
+                <p>Follow current sports stories quickly.</p>
+              </div>
+            </a>
           </div>
         </section>
       </main>
@@ -575,7 +953,7 @@
       $('statusPill').className = 'status-pill' + (on ? '' : ' off');
       $('statusPill').innerHTML = on ? '<i class="fa-solid fa-shield"></i> Privacy Mode ON' : '<i class="fa-solid fa-database"></i> Normal Mode Active';
       $('privacyText').textContent = on ? 'ON: history/settings save nahi honge.' : 'OFF: history aur theme/settings save honge.';
-      $('privacyStat').textContent = on ? 'ON' : 'OFF';
+      const privacyStatEl = $('privacyStat'); if(privacyStatEl) privacyStatEl.textContent = on ? 'ON' : 'OFF';
       renderHistory();
     }
     function setPrivacy(on){
@@ -592,7 +970,7 @@
     function saveSearch(q){ if(isPrivacyOn()) return; let h=getHistory().filter(x=>x.toLowerCase()!==q.toLowerCase()); h.unshift(q); h=h.slice(0,10); localStorage.setItem('indoogleSearchHistory', JSON.stringify(h)); renderHistory(); }
     function clearHistory(){ localStorage.removeItem('indoogleSearchHistory'); renderHistory(); }
     function renderHistory(){
-      const h = getHistory(); $('historyCount').textContent = h.length; const box=$('historyList');
+      const h = getHistory(); const historyCountEl = $('historyCount'); if(historyCountEl) historyCountEl.textContent = h.length; const box=$('historyList');
       if(isPrivacyOn()){ box.innerHTML = '<div style="color:var(--muted);font-weight:800;font-size:.82rem;line-height:1.5">Privacy ON hai, search history save nahi hogi.</div>'; return; }
       box.innerHTML = h.length ? h.map(q=>`<button class="history-chip" onclick="searchWeb('${q.replace(/'/g,"\\'")}')"><i class="fa-solid fa-clock-rotate-left"></i> ${q}</button>`).join('') : '<div style="color:var(--muted);font-weight:800;font-size:.82rem">No saved search yet</div>';
     }
@@ -623,8 +1001,9 @@
       $('themeBtn').innerHTML = light ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
       if(!isPrivacyOn()) localStorage.setItem('indoogleTheme', light ? 'light' : 'dark');
     }
-    const savedTheme = localStorage.getItem('indoogleTheme');
-    setTheme(savedTheme === 'light');
+    // Default open: Light Mode (no automatic dark mode on browser open)
+    // Dark mode can still be enabled manually from the theme button.
+    setTheme(true);
     $('themeBtn').addEventListener('click', ()=>setTheme(!document.body.classList.contains('light')));
     $('themeSideBtn').addEventListener('click', ()=>setTheme(!document.body.classList.contains('light')));
     $('shareBtn').addEventListener('click', async()=>{ try{ await navigator.clipboard.writeText(location.href); toast('Link copied'); }catch(e){ toast('Copy failed'); } });
