@@ -2,546 +2,1073 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Indoogle Search</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Indoogle Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f62fe">
 
-    <!-- PWA -->
-    <link rel="manifest" href="/Indoogle-/manifest.json">
-    <meta name="theme-color" content="#0066ff">
+  <!-- PWA -->
+  <link rel="manifest" href="/Indoogle-/manifest.json">
 
+  <!-- Icons + Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/Indoogle-/service-worker.js").then((reg) => {
-    
-    reg.onupdatefound = () => {
-      const newWorker = reg.installing;
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --bg-2: #eef4ff;
+      --card: rgba(255, 255, 255, 0.82);
+      --card-solid: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --primary: #0f62fe;
+      --primary-dark: #064bd8;
+      --accent: #ff9933;
+      --green: #138808;
+      --border: rgba(15, 98, 254, 0.12);
+      --shadow: 0 20px 60px rgba(16, 24, 40, 0.12);
+      --shadow-soft: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 28px;
+    }
 
-      newWorker.onstatechange = () => {
-        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", "Poppins", sans-serif;
+    }
 
-          // NEW UPDATE FOUND → AUTO RELOAD
-          newWorker.postMessage("skipWaiting");
-          window.location.reload();
-        }
-      };
-    };
+    html {
+      scroll-behavior: smooth;
+    }
 
-  });
-}
-</script>
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(15, 98, 254, 0.14), transparent 34%),
+        radial-gradient(circle at 88% 18%, rgba(255, 153, 51, 0.18), transparent 30%),
+        radial-gradient(circle at 52% 95%, rgba(19, 136, 8, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+    }
 
-    <!-- Icons -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(15, 98, 254, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 98, 254, 0.035) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 76%);
+      z-index: -1;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
-        }
+    .app-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        body {
-            background: #f1f3f4;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    /* Top Bar */
+    .topbar {
+      margin-top: 18px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 12px;
+      z-index: 50;
+    }
 
-        header {
-            background: #fff;
-            padding: 18px 0 10px;
-            border-bottom: 1px solid #e0e0e0;
-            position: relative;
-            text-align: center;
-        }
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
 
-        header img {
-            height: 55px;
-            margin-bottom: 5px;
-        }
+    .brand-mini img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #fff;
+      padding: 4px;
+      box-shadow: 0 8px 20px rgba(15, 98, 254, 0.12);
+    }
 
-        header h1 {
-            font-size: 2.1rem;
-            color: #1a73e8;
-            margin-top: -5px;
-        }
+    .brand-mini strong {
+      display: block;
+      font-size: 1.05rem;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+    }
 
-        .menu-btn {
-            position: absolute;
-            left: 15px;
-            top: 18px;
-            font-size: 25px;
-            cursor: pointer;
-            color: #222;
-        }
+    .brand-mini small {
+      display: block;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.74rem;
+      white-space: nowrap;
+    }
 
-        /* Drawer */
-        #drawer {
-            width: 260px;
-            height: 100%;
-            background: #ffffff;
-            position: fixed;
-            top: 0;
-            left: -260px;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.25);
-            transition: 0.35s;
-            z-index: 999;
-            overflow-y: auto;
-        }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            display: none;
-            z-index: 900;
-        }
+    .icon-btn,
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 8px 18px rgba(16, 24, 40, 0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
 
-        /* Profile Dashboard in Drawer */
-        .user-dashboard {
-            width: 100%;
-            max-width: 420px;
-            margin: 10px auto 20px;
-            background: #ffffff;
-            padding: 18px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            text-align: center;
-        }
+    .icon-btn:hover,
+    .menu-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(16, 24, 40, 0.12);
+    }
 
-        .user-dashboard img {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            border: 3px solid #1a73e8;
-        }
+    .login-chip {
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--primary), #4f8cff);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(15, 98, 254, 0.24);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      white-space: nowrap;
+    }
 
-        .user-dashboard h2 {
-            font-size: 1.3rem;
-            margin-top: 10px;
-            color: #222;
-        }
+    .login-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(15, 98, 254, 0.32);
+    }
 
-        .user-dashboard p {
-            font-size: 0.9rem;
-            color: #666;
-        }
+    /* Hero */
+    .hero {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 56px 0 30px;
+    }
 
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: 0.25s;
-        }
+    .hero-card {
+      width: min(880px, 100%);
+      padding: 44px 34px 30px;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      position: relative;
+      overflow: hidden;
+      animation: cardIn 0.75s ease both;
+    }
 
-        .menu-item:hover {
-            background: #eaeaea;
-        }
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255, 153, 51, 0.18), transparent 28%, transparent 72%, rgba(19, 136, 8, 0.16)),
+        radial-gradient(circle at 50% 0%, rgba(15, 98, 254, 0.18), transparent 36%);
+      pointer-events: none;
+    }
 
-        .search-container {
-            margin-top: 15px;
-            text-align: center;
-        }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
 
-        input[type="text"] {
-            width: 85%;
-            max-width: 550px;
-            padding: 16px 20px;
-            border-radius: 40px;
-            border: 1px solid #dadce0;
-            background: #fff;
-            font-size: 1rem;
-            transition: 0.25s;
-        }
+    .logo-wrap {
+      width: 106px;
+      height: 106px;
+      margin: 0 auto 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 32px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.45));
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 40px rgba(15, 98, 254, 0.14);
+    }
 
-        input:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-        }
+    .logo-wrap img {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      animation: logoFloat 4.5s ease-in-out infinite;
+    }
 
-        button {
-            margin-top: 15px;
-            padding: 12px 35px;
-            border-radius: 30px;
-            border: none;
-            background: #1a73e8;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-        }
+    .made-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(15, 98, 254, 0.08);
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 0.82rem;
+      border: 1px solid rgba(15, 98, 254, 0.12);
+    }
 
-        button:hover {
-            background: #1558c7;
-        }
+    h1 {
+      font-size: clamp(3.4rem, 10vw, 6.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.08em;
+      font-weight: 900;
+      color: transparent;
+      background: linear-gradient(135deg, #0b3fbd 0%, #0f62fe 40%, #ff9933 72%, #138808 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
 
-        .shortcut-bar {
-            margin: 35px auto 20px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 25px 30px;
-        }
-    .shortcut-bar {
+    .animated-slogan {
+      min-height: 28px;
+      color: #344054;
+      font-size: clamp(0.98rem, 2.5vw, 1.2rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 28px;
+    }
+
+    .animated-slogan span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: sloganLetterIn 0.45s cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    @keyframes sloganLetterIn {
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.95);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    .search-card {
+      width: min(720px, 100%);
+      margin: 0 auto;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid rgba(15, 98, 254, 0.12);
+      border-radius: 999px;
+      box-shadow: 0 18px 40px rgba(16, 24, 40, 0.12);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
+    }
+
+    .search-card:focus-within {
+      transform: translateY(-2px);
+      border-color: rgba(15, 98, 254, 0.36);
+      box-shadow: 0 24px 54px rgba(15, 98, 254, 0.18);
+    }
+
+    .search-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #f2f6ff;
+      color: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0 2px;
+    }
+
+    input::placeholder {
+      color: #98a2b3;
+      font-weight: 600;
+    }
+
+    .search-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 23px;
+      background: linear-gradient(135deg, var(--primary), #4c8dff);
+      color: #fff;
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(15, 98, 254, 0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(15, 98, 254, 0.32);
+    }
+
+    .quick-row {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 20px 24px;
-      margin: 20px auto;
-      max-width: 700px;
+      gap: 10px;
+      margin: 18px auto 0;
+    }
+
+    .quick-chip {
+      border: 1px solid rgba(15, 98, 254, 0.1);
+      background: rgba(255, 255, 255, 0.72);
+      color: #344054;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 9px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .quick-chip:hover {
+      transform: translateY(-2px);
+      background: #fff;
+    }
+
+    /* Shortcuts */
+    .shortcut-section {
+      width: min(900px, 100%);
+      margin: 26px auto 0;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 6px 12px;
+      color: #344054;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .section-title small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .shortcut-bar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
     }
 
     .shortcut {
+      min-height: 112px;
+      padding: 16px 10px 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-decoration: none;
-      color: #222;
-      width: auto;
-      min-width: 95px;
-      margin-bottom: 8px;
+      color: var(--text);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .shortcut:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 34px rgba(16, 24, 40, 0.13);
+      background: #fff;
     }
 
     .shortcut-icon {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-    }
-
-    .shortcut-icon:hover {
-      transform: scale(1.1);
+      width: 54px;
+      height: 54px;
+      border-radius: 20px;
+      background: #f8fbff;
+      display: grid;
+      place-items: center;
+      font-size: 1.55rem;
+      box-shadow: inset 0 0 0 1px rgba(15, 98, 254, 0.08);
+      margin-bottom: 10px;
     }
 
     .shortcut span {
-      margin-top: 6px;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
+      font-weight: 800;
       text-align: center;
+      max-width: 100%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100px;
     }
-    
-        footer {
-            margin-top: 40px;
-            padding: 15px 0;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #555;
-        }
 
-        /* LOCK POPUP */
-        /* Login popup disabled: login is optional */
-        #forceLoginPopup {
-            display: none !important;
-        }
+    footer {
+      text-align: center;
+      padding: 22px 0 26px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
 
-        /* Dark mode theming */
-        body.dark-mode {
-            background: #121212;
-            color: #f1f3f4;
-        }
-        body.dark-mode header,
-        body.dark-mode footer,
-        body.dark-mode #drawer,
-        body.dark-mode input[type="text"],
-        body.dark-mode button {
-            background: #1e1e1e;
-            color: #f1f3f4;
-            border-color: #333;
-        }
-        body.dark-mode .shortcut-icon {
-            background: #2c2c2c;
-        }
-        body.dark-mode input:focus {
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
-        }
-    </style>
+    /* Drawer */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.48);
+      display: none;
+      z-index: 90;
+      backdrop-filter: blur(5px);
+    }
+
+    #drawer {
+      width: min(340px, 88vw);
+      height: 100%;
+      background: rgba(255, 255, 255, 0.94);
+      position: fixed;
+      top: 0;
+      left: -380px;
+      padding: 18px;
+      box-shadow: 12px 0 40px rgba(16, 24, 40, 0.22);
+      transition: left 0.35s ease;
+      z-index: 100;
+      overflow-y: auto;
+      backdrop-filter: blur(18px);
+      border-right: 1px solid rgba(255, 255, 255, 0.82);
+    }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .drawer-head strong {
+      font-size: 1.1rem;
+    }
+
+    .user-dashboard {
+      width: 100%;
+      margin: 0 auto 14px;
+      background: linear-gradient(145deg, #ffffff, #f5f8ff);
+      padding: 20px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid rgba(15, 98, 254, 0.1);
+    }
+
+    .user-dashboard img {
+      width: 82px;
+      height: 82px;
+      object-fit: cover;
+      border-radius: 28px;
+      border: 4px solid #fff;
+      box-shadow: 0 14px 28px rgba(15, 98, 254, 0.16);
+    }
+
+    .user-dashboard h2 {
+      font-size: 1.05rem;
+      margin-top: 11px;
+      color: var(--text);
+    }
+
+    .user-dashboard p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      word-break: break-word;
+      margin-top: 4px;
+    }
+
+    .drawer-btn {
+      width: 100%;
+      padding: 13px 14px;
+      border: 0;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 900;
+      margin: 6px 0 10px;
+    }
+
+    #loginBtn {
+      background: linear-gradient(135deg, var(--primary), #4c8dff);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(15, 98, 254, 0.22);
+    }
+
+    #logoutBtn {
+      background: #fff1f0;
+      color: #d92d20;
+      border: 1px solid rgba(217, 45, 32, 0.14);
+      display: none;
+    }
+
+    .menu-list {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      border-radius: 16px;
+      color: #344054;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .menu-item i {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #f2f6ff;
+      color: var(--primary);
+    }
+
+    .menu-item:hover {
+      background: #f8fbff;
+      transform: translateX(3px);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 320px;
+      padding: 13px 16px;
+      background: #101828;
+      color: #fff;
+      border-radius: 16px;
+      font-weight: 800;
+      box-shadow: 0 16px 40px rgba(16, 24, 40, 0.24);
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+      transition: 0.3s ease;
+      z-index: 200;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      --bg: #0b1020;
+      --bg-2: #111827;
+      --card: rgba(17, 24, 39, 0.78);
+      --card-solid: #111827;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --border: rgba(255, 255, 255, 0.12);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(15, 98, 254, 0.26), transparent 34%),
+        radial-gradient(circle at 88% 18%, rgba(255, 153, 51, 0.18), transparent 30%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+    }
+
+    body.dark-mode .topbar,
+    body.dark-mode #drawer,
+    body.dark-mode .shortcut,
+    body.dark-mode .quick-chip,
+    body.dark-mode .search-card,
+    body.dark-mode .user-dashboard,
+    body.dark-mode .icon-btn,
+    body.dark-mode .menu-btn {
+      background: rgba(17, 24, 39, 0.86);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    body.dark-mode .animated-slogan,
+    body.dark-mode .section-title,
+    body.dark-mode .menu-item,
+    body.dark-mode input[type="text"] {
+      color: var(--text);
+    }
+
+    body.dark-mode .search-icon,
+    body.dark-mode .shortcut-icon,
+    body.dark-mode .menu-item i {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    body.dark-mode .brand-mini small,
+    body.dark-mode .user-dashboard p,
+    body.dark-mode footer,
+    body.dark-mode .section-title small {
+      color: var(--muted);
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 860px) {
+      .shortcut-bar {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .hero-card {
+        padding: 34px 18px 24px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .app-shell {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .topbar {
+        top: 8px;
+        margin-top: 10px;
+        border-radius: 20px;
+      }
+
+      .brand-mini small {
+        display: none;
+      }
+
+      .login-chip {
+        display: none;
+      }
+
+      .hero {
+        padding: 34px 0 20px;
+      }
+
+      .logo-wrap {
+        width: 88px;
+        height: 88px;
+        border-radius: 26px;
+      }
+
+      .logo-wrap img {
+        width: 68px;
+        height: 68px;
+      }
+
+      h1 {
+        font-size: clamp(3.1rem, 18vw, 4.3rem);
+      }
+
+      .search-card {
+        border-radius: 24px;
+        padding: 9px;
+        align-items: stretch;
+        display: grid;
+        grid-template-columns: 42px 1fr;
+      }
+
+      .search-icon {
+        width: 42px;
+        height: 42px;
+      }
+
+      input[type="text"] {
+        min-width: 0;
+      }
+
+      .search-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+        padding: 13px 18px;
+      }
+
+      .shortcut-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .shortcut {
+        min-height: 104px;
+      }
+
+      .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        max-width: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div id="overlay"></div>
 
-    <div id="overlay"></div>
+  <!-- Drawer -->
+  <aside id="drawer" aria-label="Navigation drawer">
+    <div class="drawer-head">
+      <strong>Indoogle Menu</strong>
+      <button class="icon-btn" id="closeMenu" type="button" aria-label="Close menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
 
-    <!-- Drawer -->
-    <div id="drawer">
-         
-        <div class="user-dashboard">
-            <img id="profilePic" src="https://i.ibb.co/8jW3P0b/default-user.png">
-            <h2 id="profileName">Guest User</h2>
-            <p id="profileEmail">Not Logged In</p>
+    <div class="user-dashboard">
+      <img id="profilePic" src="https://i.ibb.co/8jW3P0b/default-user.png" alt="User profile">
+      <h2 id="profileName">Guest User</h2>
+      <p id="profileEmail">Login optional</p>
+    </div>
+
+    <button id="loginBtn" class="drawer-btn" type="button"><i class="fab fa-google"></i> Login with Google</button>
+    <button id="logoutBtn" class="drawer-btn" type="button"><i class="fas fa-right-from-bracket"></i> Logout</button>
+
+    <div class="menu-list">
+      <div class="menu-item"><i class="fas fa-redo"></i> Refresh</div>
+      <div class="menu-item"><i class="fas fa-cog"></i> Settings</div>
+      <div class="menu-item"><i class="fas fa-palette"></i> Theming</div>
+      <div class="menu-item"><i class="fas fa-share-alt"></i> Share</div>
+      <div class="menu-item"><i class="fas fa-info-circle"></i> About</div>
+      <div class="menu-item"><i class="fas fa-times-circle"></i> Exit</div>
+    </div>
+  </aside>
+
+  <main class="app-shell">
+    <!-- Top Bar -->
+    <nav class="topbar">
+      <div class="brand-mini">
+        <button class="menu-btn" id="openMenu" type="button" aria-label="Open menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
+        <div>
+          <strong>Indoogle</strong>
+          <small>India-first search experience</small>
         </div>
+      </div>
 
-        <button id="logoutBtn"
-            style="padding:10px 20px;background:#ff3b30;color:#fff;border:none;border-radius:8px;cursor:pointer;display:none;">
-            Logout
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i>
         </button>
-        <button id="loginBtn"
-            style="padding:10px 20px;background:#1a73e8;color:#fff;border:none;border-radius:8px;cursor:pointer;">
-            Login with Google
+        <button class="login-chip" id="topLoginBtn" type="button">
+          <i class="fab fa-google"></i> Login
         </button>
+      </div>
+    </nav>
 
-        <hr style="margin:14px 0;">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="logo-wrap">
+            <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
+          </div>
 
-        <div class="menu-item"><i class="fas fa-redo"></i> Refresh</div>
-        <div class="menu-item"><i class="fas fa-cog"></i> Settings</div>
-        <div class="menu-item"><i class="fas fa-palette"></i> Theming</div>
-        <div class="menu-item"><i class="fas fa-share-alt"></i> Share</div>
-        <div class="menu-item"><i class="fas fa-info-circle"></i> About</div>
-        <div class="menu-item"><i class="fas fa-times-circle"></i> Exit</div>
+          <div class="made-pill"><span>🇮🇳</span> Made for Bharat</div>
+          <h1>Indoogle</h1>
+          <p id="animatedSlogan" class="animated-slogan">India’s Own Search Engine, Built for Bharat</p>
 
-    </div>
+          <form id="searchForm" class="search-card">
+            <div class="search-icon"><i class="fas fa-search"></i></div>
+            <input id="query" type="text" placeholder="Search anything on the web..." autocomplete="off">
+            <button class="search-btn" type="submit">Search <i class="fas fa-arrow-right"></i></button>
+          </form>
 
-    <!-- Header -->
-    <header>
-        <div class="menu-btn" id="openMenu"><i class="fas fa-bars"></i></div>
-        <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png">
-        <h1>Indoogle</h1>
-        <h6>India’s Own Search Engine, Built for Bharat</h6>
-    </header>
+          <div class="quick-row" aria-label="Quick searches">
+            <button class="quick-chip" type="button" data-search="latest news India">Latest News</button>
+            <button class="quick-chip" type="button" data-search="weather today">Weather</button>
+            <button class="quick-chip" type="button" data-search="government services India">Govt Services</button>
+            <button class="quick-chip" type="button" data-search="technology news">Technology</button>
+          </div>
 
-    <!-- Search -->
-    <div class="search-container">
-        <form id="searchForm">
-            <input id="query" type="text" placeholder="Search anything...">
-            <button type="submit"><i class="fas fa-search"></i> Search</button>
-        </form>
-    </div>
+          <div class="shortcut-section">
+            <div class="section-title">
+              <span>Popular Shortcuts</span>
+              <small>Fast access to daily websites</small>
+            </div>
 
-    <!-- Shortcut icons -->
-    <div class="shortcut-bar">
-        <a class="shortcut" href="https://youtube.com" target="_blank">
-            <div class="shortcut-icon" style="color:red;"><i class="fab fa-youtube"></i></div>
-            <span>YouTube</span>
-        </a>
+            <div class="shortcut-bar">
+              <a class="shortcut" href="https://youtube.com" target="_blank" rel="noopener">
+                <div class="shortcut-icon" style="color:#ff0000;"><i class="fab fa-youtube"></i></div>
+                <span>YouTube</span>
+              </a>
 
-        <a class="shortcut" href="https://flipkart.com" target="_blank">
-            <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
-            <span>Flipkart</span>
-        </a>
+              <a class="shortcut" href="https://flipkart.com" target="_blank" rel="noopener">
+                <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
+                <span>Flipkart</span>
+              </a>
 
-        <a class="shortcut" href="https://amazon.in" target="_blank">
-            <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
-            <span>Amazon</span>
-        </a>
-        
-          <a href="https://www.meesho.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
-      <span>Meesho</span>
-    </a>
-    
-    <a href="https://www.ndtv.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
-      <span>NDTV</span>
-    </a>
-    
-    <a href="https://timesofindia.indiatimes.com/" target="_blank" class="shortcut">
-      <div class="shortcut-icon" style="color:#333;"><i class="fa-regular fa-clock"></i></div>
-      <span>Times of India</span>
-    </a>
-    </div>
+              <a class="shortcut" href="https://amazon.in" target="_blank" rel="noopener">
+                <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
+                <span>Amazon</span>
+              </a>
+
+              <a class="shortcut" href="https://www.meesho.com/" target="_blank" rel="noopener">
+                <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
+                <span>Meesho</span>
+              </a>
+
+              <a class="shortcut" href="https://www.ndtv.com/" target="_blank" rel="noopener">
+                <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
+                <span>NDTV</span>
+              </a>
+
+              <a class="shortcut" href="https://timesofindia.indiatimes.com/" target="_blank" rel="noopener">
+                <div class="shortcut-icon" style="color:#333333;"><i class="fa-regular fa-clock"></i></div>
+                <span>TOI</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <footer>
-        <p>🇮🇳 Made with ❤️ in India | © 2025 Indoogle</p>
+      <p>🇮🇳 Made with ❤️ in India | © 2026 Indoogle</p>
     </footer>
+  </main>
 
-    <!-- 🛑 LOCK POPUP -->
-    <div id="forceLoginPopup">
-        <div style="
-            background:white;
-            width:85%;
-            max-width:350px;
-            margin:auto;
-            padding:25px;
-            border-radius:15px;
-            box-shadow:0 5px 15px rgba(0,0,0,0.3);
-        ">
-            <h2 style="color:#e53935;margin-bottom:10px;">⚠ Login Required</h2>
-            <p style="font-size:1rem;margin-bottom:20px;">
-                Please login to continue.<br>Without login you cannot use this browser.
-            </p>
-            <button id="forceLoginBtn"
-                style="padding:12px 30px;background:#1a73e8;color:white;border:none;border-radius:8px;cursor:pointer;">
-                Login with Google
-            </button>
-        </div>
-    </div>
+  <div id="toast" class="toast"></div>
 
-    <!-- Firebase + Login System -->
-    <script type="module">
+  <!-- Firebase + Login System -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-            from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXGwcHR_JrwLfW0vpZmR39rCpRJPBzBBo",
+      authDomain: "indoogle.firebaseapp.com",
+      projectId: "indoogle",
+      storageBucket: "indoogle.firebasestorage.app",
+      messagingSenderId: "249811375898",
+      appId: "1:249811375898:web:126b7f33edbf7cbb58bea3",
+      measurementId: "G-YCFM3F2JTL"
+    };
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCXGwcHR_JrwLfW0vpZmR39rCpRJPBzBBo",
-            authDomain: "indoogle.firebaseapp.com",
-            projectId: "indoogle",
-            storageBucket: "indoogle.firebasestorage.app",
-            messagingSenderId: "249811375898",
-            appId: "1:249811375898:web:126b7f33edbf7cbb58bea3",
-            measurementId: "G-YCFM3F2JTL"
-        };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+    const drawer = document.getElementById("drawer");
+    const overlay = document.getElementById("overlay");
+    const openMenu = document.getElementById("openMenu");
+    const closeMenu = document.getElementById("closeMenu");
+    const loginBtn = document.getElementById("loginBtn");
+    const topLoginBtn = document.getElementById("topLoginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const profilePic = document.getElementById("profilePic");
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const themeBtn = document.getElementById("themeBtn");
+    const toast = document.getElementById("toast");
 
-        const drawer = document.getElementById("drawer");
-        const overlay = document.getElementById("overlay");
-        const openMenu = document.getElementById("openMenu");
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
 
-        const loginBtn = document.getElementById("loginBtn");
-        const logoutBtn = document.getElementById("logoutBtn");
+    function openDrawer() {
+      drawer.style.left = "0";
+      overlay.style.display = "block";
+    }
 
-        const profilePic = document.getElementById("profilePic");
-        const profileName = document.getElementById("profileName");
-        const profileEmail = document.getElementById("profileEmail");
+    function closeDrawer() {
+      drawer.style.left = "-380px";
+      overlay.style.display = "none";
+    }
 
-        const forcePopup = document.getElementById("forceLoginPopup");
-        const forceLoginBtn = document.getElementById("forceLoginBtn");
+    openMenu.onclick = openDrawer;
+    closeMenu.onclick = closeDrawer;
+    overlay.onclick = closeDrawer;
 
-        // Drawer open/close
-        openMenu.onclick = () => {
-            drawer.style.left = "0px";
-            overlay.style.display = "block";
-        };
-        overlay.onclick = () => {
-            drawer.style.left = "-260px";
-            overlay.style.display = "none";
-        };
+    document.getElementById("searchForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const q = document.getElementById("query").value.trim();
+      if (!q) {
+        showToast("Please type something to search");
+        return;
+      }
+      window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(q);
+    });
 
-        // Search
-        document.getElementById("searchForm").addEventListener("submit", e => {
-            e.preventDefault();
-            let q = document.getElementById("query").value.trim();
-            if (!q) return;
-            window.open("https://www.google.com/search?q=" + encodeURIComponent(q), "_blank");
-        });
+    document.querySelectorAll(".quick-chip").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const text = btn.dataset.search || btn.textContent.trim();
+        document.getElementById("query").value = text;
+        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text);
+      });
+    });
 
-        // LOGIN
-        loginBtn.onclick = () => {
-            signInWithPopup(auth, provider)
-                .then(result => updateUI(result.user));
-        };
-        forceLoginBtn.onclick = loginBtn.onclick;
+    function loginWithGoogle() {
+      signInWithPopup(auth, provider)
+        .then(result => {
+          updateUI(result.user);
+          showToast("Login successful");
+        })
+        .catch(() => showToast("Login cancelled or failed"));
+    }
 
-        // LOGOUT
-        logoutBtn.onclick = () => {
-            signOut(auth).then(() => updateUI(null));
-        };
+    loginBtn.onclick = loginWithGoogle;
+    topLoginBtn.onclick = loginWithGoogle;
 
-        // UI Update - Login optional, no home screen lock
-        function updateUI(user) {
-            if (user) {
-                profilePic.src = user.photoURL || "https://i.ibb.co/8jW3P0b/default-user.png";
-                profileName.innerText = user.displayName || "User";
-                profileEmail.innerText = user.email || "Logged In";
+    logoutBtn.onclick = () => {
+      signOut(auth).then(() => {
+        updateUI(null);
+        showToast("Logged out successfully");
+      });
+    };
 
-                loginBtn.style.display = "none";
-                logoutBtn.style.display = "block";
-            } else {
-                profilePic.src = "https://i.ibb.co/8jW3P0b/default-user.png";
-                profileName.innerText = "Guest User";
-                profileEmail.innerText = "Not Logged In";
+    function updateUI(user) {
+      if (user) {
+        profilePic.src = user.photoURL || "https://i.ibb.co/8jW3P0b/default-user.png";
+        profileName.innerText = user.displayName || "Indoogle User";
+        profileEmail.innerText = user.email || "Logged in";
+        loginBtn.style.display = "none";
+        topLoginBtn.style.display = "none";
+        logoutBtn.style.display = "block";
+      } else {
+        profilePic.src = "https://i.ibb.co/8jW3P0b/default-user.png";
+        profileName.innerText = "Guest User";
+        profileEmail.innerText = "Login optional";
+        loginBtn.style.display = "block";
+        topLoginBtn.style.display = "inline-flex";
+        logoutBtn.style.display = "none";
+      }
+    }
 
-                loginBtn.style.display = "block";
-                logoutBtn.style.display = "none";
+    onAuthStateChanged(auth, user => updateUI(user));
+
+    themeBtn.onclick = () => {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      themeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      localStorage.setItem("indoogle-theme", isDark ? "dark" : "light");
+    };
+
+    if (localStorage.getItem("indoogle-theme") === "dark") {
+      document.body.classList.add("dark-mode");
+      themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    const menuItems = document.querySelectorAll(".menu-item");
+    menuItems[0].onclick = () => location.reload();
+    menuItems[1].onclick = () => showToast("Settings page coming soon");
+    menuItems[2].onclick = () => themeBtn.click();
+    menuItems[3].onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        showToast("Page URL copied");
+      } catch (err) {
+        showToast("Copy failed");
+      }
+    };
+    menuItems[4].onclick = () => showToast("Indoogle - India’s Own Search Engine");
+    menuItems[5].onclick = () => {
+      closeDrawer();
+      showToast("Please close the tab to exit");
+    };
+  </script>
+
+  <!-- Animated Slogan -->
+  <script>
+    const slogan = document.getElementById("animatedSlogan");
+    const sloganText = slogan.textContent.trim();
+    slogan.innerHTML = "";
+
+    [...sloganText].forEach((char, index) => {
+      const span = document.createElement("span");
+      span.innerHTML = char === " " ? "&nbsp;" : char;
+      span.style.animationDelay = `${index * 0.035}s`;
+      slogan.appendChild(span);
+    });
+  </script>
+
+  <!-- PWA Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/Indoogle-/service-worker.js").then((reg) => {
+        reg.onupdatefound = () => {
+          const newWorker = reg.installing;
+          newWorker.onstatechange = () => {
+            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+              newWorker.postMessage("skipWaiting");
+              window.location.reload();
             }
-
-            // Always keep popup hidden so home/search works without login
-            forcePopup.style.display = "none";
-        }
-
-        // Auto check login, but do not block guest users
-        onAuthStateChanged(auth, user => updateUI(user));
-
-        // MENU ITEMS FUNCTIONALITY
-        const menuItems = document.querySelectorAll(".menu-item");
-
-        // Refresh
-        menuItems[0].onclick = () => location.reload();
-
-        // Settings
-        menuItems[1].onclick = () => alert("Settings page coming soon!");
-
-        // Theming
-        menuItems[2].onclick = () => document.body.classList.toggle("dark-mode");
-
-        // Share
-        menuItems[3].onclick = async () => {
-            try {
-                await navigator.clipboard.writeText(window.location.href);
-                alert("Page URL copied to clipboard!");
-            } catch (err) {
-                alert("Failed to copy URL: " + err);
-            }
+          };
         };
-
-        // About
-        menuItems[4].onclick = () => alert("Indoogle - India’s Own Search Engine\n© 2025 Made with ❤️ in India");
-
-        // Exit
-        menuItems[5].onclick = () => {
-            if(confirm("Are you sure you want to exit?")) {
-                signOut(auth).then(() => {
-                    updateUI(null);
-                    drawer.style.left = "-260px";
-                    overlay.style.display = "none";
-                    alert("You have exited. Please close the tab.");
-                    // Try to close tab (works if opened via JS)
-                    window.open('', '_self').close();
-                });
-            }
-        };
-
-    </script>
-
-    <!-- 🔥 AUTO UPDATE (NEW VERSION AVAILABLE POPUP) -->
-    <script>
-        if ("serviceWorker" in navigator) {
-            let newWorker;
-
-            navigator.serviceWorker.addEventListener("controllerchange", () => {
-                window.location.reload();
-            });
-
-            navigator.serviceWorker.getRegistration().then(reg => {
-                if (!reg) return;
-
-                reg.addEventListener("updatefound", () => {
-                    newWorker = reg.installing;
-
-                    newWorker.addEventListener("statechange", () => {
-                        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-                            if (confirm("🔄 New update available! Refresh now?")) {
-                                newWorker.postMessage({ action: "skipWaiting" });
-                            }
-                        }
-                    });
-                });
-            });
-        }
-    </script>
-
+      }).catch(() => {});
+    }
+  </script>
 </body>
 
 </html>
