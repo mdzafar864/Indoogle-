@@ -1,1074 +1,640 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <title>Indoogle Search</title>
+  <title>Indoogle Browser</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0f62fe">
-
-  <!-- PWA -->
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), bluetooth=()">
+  <meta name="theme-color" content="#111827">
   <link rel="manifest" href="/Indoogle-/manifest.json">
-
-  <!-- Icons + Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
-    :root {
-      --bg: #f5f8ff;
-      --bg-2: #eef4ff;
-      --card: rgba(255, 255, 255, 0.82);
-      --card-solid: #ffffff;
-      --text: #101828;
-      --muted: #667085;
-      --primary: #0f62fe;
-      --primary-dark: #064bd8;
-      --accent: #ff9933;
-      --green: #138808;
-      --border: rgba(15, 98, 254, 0.12);
-      --shadow: 0 20px 60px rgba(16, 24, 40, 0.12);
-      --shadow-soft: 0 10px 30px rgba(16, 24, 40, 0.08);
-      --radius: 28px;
+    :root{
+      --bg:#0b1020; --bg2:#111827; --panel:rgba(255,255,255,.08); --panel2:rgba(255,255,255,.12);
+      --card:rgba(255,255,255,.10); --cardSolid:#151b2e; --text:#f8fafc; --muted:#aab4c8;
+      --border:rgba(255,255,255,.14); --orange:#fb542b; --orange2:#ff8a00; --blue:#3b82f6;
+      --green:#22c55e; --red:#ef4444; --shadow:0 30px 90px rgba(0,0,0,.35); --radius:22px;
+    }
+    body.light{
+      --bg:#f4f7fb; --bg2:#ffffff; --panel:rgba(255,255,255,.78); --panel2:#ffffff;
+      --card:#ffffff; --cardSolid:#ffffff; --text:#101828; --muted:#667085; --border:rgba(16,24,40,.10);
+      --shadow:0 24px 70px rgba(16,24,40,.13);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+    html,body{min-height:100%}
+    body{background:radial-gradient(circle at 18% 12%, rgba(251,84,43,.32), transparent 28%),radial-gradient(circle at 82% 2%, rgba(59,130,246,.26), transparent 28%),linear-gradient(140deg,var(--bg),var(--bg2));color:var(--text);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(to bottom,black,transparent 82%);pointer-events:none}
+    .browser-shell{width:min(1180px,94vw);margin:18px auto 28px;border:1px solid var(--border);border-radius:28px;overflow:hidden;background:rgba(255,255,255,.06);box-shadow:var(--shadow);backdrop-filter:blur(22px)}
+    .top-chrome{background:rgba(7,10,22,.72);border-bottom:1px solid var(--border);padding:10px 12px 12px;position:sticky;top:0;z-index:20;backdrop-filter:blur(22px)}
+    body.light .top-chrome{background:rgba(255,255,255,.84)}
+    .tabs-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+    .window-dots{display:flex;gap:7px;padding:0 8px 0 2px}.dot{width:12px;height:12px;border-radius:50%}.dot.red{background:#ff5f57}.dot.yellow{background:#febc2e}.dot.green{background:#28c840}
+    .tab{height:36px;min-width:210px;max-width:250px;padding:0 14px;display:flex;align-items:center;gap:9px;background:var(--panel2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-weight:700;font-size:.88rem}.tab i:first-child{color:#38bdf8}.tab .close{margin-left:auto;color:var(--muted)}
+    .plus-tab,.icon-btn{width:38px;height:38px;border-radius:14px;border:1px solid var(--border);background:var(--panel);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:.2s}.plus-tab:hover,.icon-btn:hover{transform:translateY(-1px);background:var(--panel2)}
+    .address-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}.nav-controls{display:flex;gap:8px}.omnibox{height:48px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.10);display:flex;align-items:center;padding:0 10px 0 16px;gap:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+    body.light .omnibox{background:#f7f9fc}.shield{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--orange),var(--orange2));color:white;box-shadow:0 10px 22px rgba(251,84,43,.28)}
+    .omnibox input{flex:1;height:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:1rem;font-weight:600}.omnibox input::placeholder{color:var(--muted);font-weight:500}.go-btn{border:0;border-radius:999px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:white;height:36px;padding:0 18px;font-weight:800;cursor:pointer}.go-btn:hover{filter:brightness(1.06)}
+    .right-actions{display:flex;gap:8px}.menu-toggle{display:none}
+    .content{display:grid;grid-template-columns:285px 1fr;min-height:720px}.sidebar{border-right:1px solid var(--border);padding:18px;background:rgba(255,255,255,.04)}body.light .sidebar{background:rgba(255,255,255,.50)}
+    .brand{display:flex;align-items:center;gap:13px;margin:4px 0 20px;padding:10px 9px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}body.light .brand{background:rgba(255,255,255,.72);border-color:rgba(16,24,40,.08)}.brand-logo{flex:0 0 54px;width:54px;height:54px;border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,153,51,.12));display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.24);box-shadow:0 12px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.5);padding:7px}.brand-logo img{width:100%;height:100%;object-fit:contain;display:block}.brand-text{min-width:0;line-height:1.1}.brand h1{font-size:1.05rem;font-weight:900;letter-spacing:-.02em;line-height:1.05}.brand p{font-size:.70rem;color:var(--muted);font-weight:800;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .side-section{margin:18px 0}.side-title{font-size:.73rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:900;margin-bottom:8px}.side-item{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid transparent;border-radius:15px;color:var(--text);background:transparent;cursor:pointer;font-weight:700;text-align:left}.side-item:hover,.side-item.active{background:var(--panel2);border-color:var(--border)}.side-item i{width:18px;text-align:center;color:var(--orange2)}
+    .privacy-card{border:1px solid var(--border);background:var(--panel);border-radius:18px;padding:14px}.status-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 11px;background:rgba(34,197,94,.12);color:#75f0a2;font-weight:900;font-size:.78rem}.status-pill.off{background:rgba(251,84,43,.12);color:#ffac94}.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px;color:var(--muted);font-weight:700;font-size:.86rem}.switch{position:relative;width:52px;height:30px}.switch input{display:none}.slider{position:absolute;inset:0;background:rgba(255,255,255,.22);border:1px solid var(--border);border-radius:999px;cursor:pointer}.slider:before{content:"";position:absolute;width:22px;height:22px;left:4px;top:3px;background:white;border-radius:50%;transition:.2s}.switch input:checked + .slider{background:linear-gradient(135deg,var(--orange),var(--orange2))}.switch input:checked + .slider:before{transform:translateX(21px)}
+    .main{padding:34px;position:relative}.hero{display:grid;grid-template-columns:1.12fr .88fr;gap:24px;align-items:center;margin-top:10px}.hero-card{border:1px solid var(--border);border-radius:32px;padding:36px;background:linear-gradient(140deg,rgba(255,255,255,.14),rgba(255,255,255,.05));box-shadow:0 16px 45px rgba(0,0,0,.18);backdrop-filter:blur(22px)}body.light .hero-card{background:rgba(255,255,255,.82)}
+    .label{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--muted);font-weight:900;font-size:.8rem}.label i{color:var(--orange2)}.hero h2{font-size:clamp(2.4rem,6vw,5.4rem);line-height:.92;letter-spacing:-.07em;margin:20px 0 10px;font-weight:900}.gradient-text{background:linear-gradient(135deg,#fff,var(--orange2),#60a5fa);-webkit-background-clip:text;background-clip:text;color:transparent}body.light .gradient-text{background:linear-gradient(135deg,#111827,var(--orange),#1d4ed8);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .slogan{min-height:29px;color:var(--muted);font-weight:800;font-size:1.05rem;letter-spacing:.02em}.cursor{display:inline-block;width:2px;height:20px;background:var(--orange2);margin-left:3px;animation:blink .8s infinite}@keyframes blink{50%{opacity:0}}
+    .hero-search{margin-top:26px;height:62px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 10px 0 20px}body.light .hero-search{background:#fff}.hero-search input{flex:1;border:0;outline:0;background:transparent;color:var(--text);font-size:1.05rem;font-weight:700}.hero-search i{color:var(--orange2)}.hero-search button{height:46px;border:0;border-radius:999px;padding:0 22px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:white;font-weight:900;cursor:pointer}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.stat{padding:14px;border-radius:18px;background:var(--panel);border:1px solid var(--border)}.stat strong{display:block;font-size:1.3rem}.stat span{color:var(--muted);font-weight:700;font-size:.78rem}
+    .shield-panel{border:1px solid var(--border);border-radius:32px;padding:24px;background:var(--panel);min-height:100%}.shield-big{width:90px;height:90px;border-radius:28px;background:linear-gradient(135deg,var(--orange),var(--orange2));display:grid;place-items:center;font-size:2.4rem;color:white;box-shadow:0 20px 40px rgba(251,84,43,.32);margin-bottom:18px}.shield-panel h3{font-size:1.55rem;margin-bottom:8px}.shield-panel p{color:var(--muted);line-height:1.6;font-weight:600}.privacy-list{margin-top:18px;display:grid;gap:10px}.privacy-list div{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);background:rgba(255,255,255,.05);border-radius:16px;font-weight:800}.privacy-list i{color:var(--green)}
+    .shortcuts-wrap{margin-top:26px}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.section-head h3{font-size:1.1rem}.section-head span{font-size:.82rem;color:var(--muted);font-weight:800}.shortcuts{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}.shortcut{text-decoration:none;color:var(--text);border:1px solid var(--border);background:var(--card);border-radius:22px;padding:17px 10px;text-align:center;transition:.22s;min-height:112px}.shortcut:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(0,0,0,.16);border-color:rgba(251,84,43,.4)}.shortcut-icon{width:54px;height:54px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;background:rgba(255,255,255,.10);font-size:1.6rem}.shortcut span{font-weight:900;font-size:.84rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .history-list{max-height:190px;overflow:auto;display:grid;gap:8px;margin-top:10px}.history-chip{border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:9px 10px;color:var(--text);font-weight:700;font-size:.82rem;cursor:pointer;text-align:left}.small-btn{margin-top:10px;width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px;font-weight:900;cursor:pointer}.small-btn.danger{color:#ffb4a7}
+    footer{padding:22px;text-align:center;color:var(--muted);font-weight:700;border-top:1px solid var(--border);background:rgba(255,255,255,.04)}
+    .toast{position:fixed;right:18px;bottom:18px;background:var(--cardSolid);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);font-weight:800;transform:translateY(30px);opacity:0;pointer-events:none;transition:.24s;z-index:50}.toast.show{transform:translateY(0);opacity:1}
+
+    /* Old Indoogle-style centered logo + slogan */
+    .old-brand-hero{
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+    .home-logo-wrap{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+    .home-logo{
+      width:96px;
+      height:96px;
+      object-fit:contain;
+      border-radius:24px;
+      padding:10px;
+      background:rgba(255,255,255,.12);
+      border:1px solid var(--border);
+      box-shadow:0 14px 34px rgba(0,0,0,.22);
+      margin-bottom:12px;
+    }
+    body.light .home-logo{
+      background:#fff;
+      box-shadow:0 12px 28px rgba(15,23,42,.14);
+    }
+    .made-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.10);
+      color:var(--muted);
+      font-weight:900;
+      font-size:.86rem;
+      margin:4px 0 10px;
+    }
+    body.light .made-badge{background:#fff}
+    .old-home-title{
+      font-size:clamp(2.35rem,5.1vw,4.45rem)!important;
+      line-height:.96!important;
+      margin:6px 0 8px!important;
+      letter-spacing:-.055em!important;
+      font-weight:950!important;
+      background:linear-gradient(135deg,#fff,var(--orange2),#60a5fa);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    body.light .old-home-title{
+      background:linear-gradient(135deg,#111827,var(--orange),#1d4ed8);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .old-slogan{
+      min-height:30px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:22px!important;
+    }
+    .old-search{
+      width:100%;
+      max-width:760px;
+      margin-top:8px!important;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Inter", "Poppins", sans-serif;
+
+    /* Indian flag color text style */
+    .india-flag-title{
+      background:linear-gradient(90deg,#ff9933 0%,#ff9933 32%,#ffffff 48%,#138808 68%,#138808 100%)!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      color:transparent!important;
+      text-shadow:0 12px 35px rgba(255,153,51,.18);
+      -webkit-text-stroke:1px rgba(255,255,255,.10);
+    }
+    body.light .india-flag-title{
+      background:linear-gradient(90deg,#ff7a00 0%,#ff9933 34%,#1d4ed8 50%,#138808 68%,#0f7a07 100%)!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      color:transparent!important;
+      -webkit-text-stroke:0;
+      text-shadow:0 10px 28px rgba(15,23,42,.10);
+    }
+    .india-flag-slogan #animatedSlogan{
+      font-weight:950;
+      background:linear-gradient(90deg,#ff9933 0%,#ff9933 30%,#f8fafc 47%,#2563eb 52%,#138808 72%,#138808 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      letter-spacing:.01em;
+    }
+    body.light .india-flag-slogan #animatedSlogan{
+      background:linear-gradient(90deg,#ff7a00 0%,#ff9933 32%,#1d4ed8 50%,#138808 70%,#0f7a07 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .india-flag-slogan .cursor{
+      background:#1d4ed8!important;
+      box-shadow:0 0 14px rgba(29,78,216,.45);
     }
 
-    html {
-      scroll-behavior: smooth;
+    @media(max-width:980px){.content{grid-template-columns:1fr}.sidebar{position:fixed;inset:0 auto 0 0;width:310px;z-index:40;transform:translateX(-105%);transition:.25s;box-shadow:var(--shadow);background:var(--bg2)}.sidebar.open{transform:translateX(0)}.menu-toggle{display:grid}.hero{grid-template-columns:1fr}.shortcuts{grid-template-columns:repeat(3,1fr)}.tab{min-width:150px}.address-row{grid-template-columns:auto 1fr auto}.right-actions .hide-mobile{display:none}.main{padding:22px}.browser-shell{width:100%;margin:0;border-radius:0;min-height:100vh}.top-chrome{border-radius:0}}
+    @media(max-width:620px){.tabs-row{display:none}.address-row{grid-template-columns:auto 1fr}.right-actions{display:none}.nav-controls .icon-btn:not(.menu-toggle){display:none}.omnibox{height:46px;padding-left:12px}.go-btn{display:none}.hero-card{padding:24px;border-radius:26px}.hero-search{height:auto;border-radius:24px;padding:12px;align-items:stretch}.hero-search button{height:44px}.stats{grid-template-columns:1fr}.shortcuts{grid-template-columns:repeat(2,1fr)}.hero h2{font-size:3.1rem}.shield-panel{border-radius:26px}.content{min-height:auto}}
+  
+    /* Clean readable Indoogle name for both dark and light mode */
+    .clean-indoogle-title{
+      color:#ffffff!important;
+      background:none!important;
+      -webkit-background-clip:initial!important;
+      background-clip:initial!important;
+      text-shadow:0 12px 35px rgba(0,0,0,.35), 0 0 26px rgba(255,255,255,.12);
+      -webkit-text-stroke:0!important;
+    }
+    body.light .clean-indoogle-title{
+      color:#111827!important;
+      background:none!important;
+      text-shadow:0 10px 28px rgba(15,23,42,.12);
+    }
+    .clean-slogan #animatedSlogan{
+      color:#e5e7eb!important;
+      background:none!important;
+      -webkit-background-clip:initial!important;
+      background-clip:initial!important;
+      font-weight:900;
+      text-shadow:0 8px 20px rgba(0,0,0,.28);
+    }
+    body.light .clean-slogan #animatedSlogan{
+      color:#374151!important;
+      background:none!important;
+      text-shadow:none;
+    }
+    .clean-slogan .cursor{
+      background:var(--orange2)!important;
+      box-shadow:0 0 14px rgba(251,146,60,.45);
     }
 
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 12% 10%, rgba(15, 98, 254, 0.14), transparent 34%),
-        radial-gradient(circle at 88% 18%, rgba(255, 153, 51, 0.18), transparent 30%),
-        radial-gradient(circle at 52% 95%, rgba(19, 136, 8, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg), var(--bg-2));
+  
+    /* Final premium Indoogle browser name color - modern, professional, readable */
+    .pro-indoogle-title{
+      background:linear-gradient(120deg,#f8fafc 0%,#93c5fd 28%,#38bdf8 50%,#22c55e 78%,#f8fafc 100%)!important;
+      background-size:220% 220%!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      color:transparent!important;
+      text-shadow:0 18px 45px rgba(0,0,0,.42), 0 0 32px rgba(56,189,248,.18)!important;
+      -webkit-text-stroke:0!important;
+      animation:brandGlow 8s ease-in-out infinite;
+    }
+    body.light .pro-indoogle-title{
+      background:linear-gradient(120deg,#0f172a 0%,#1d4ed8 34%,#0891b2 55%,#047857 82%,#111827 100%)!important;
+      background-size:220% 220%!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      color:transparent!important;
+      text-shadow:0 12px 28px rgba(15,23,42,.15), 0 0 22px rgba(29,78,216,.10)!important;
+    }
+    @keyframes brandGlow{
+      0%,100%{background-position:0% 50%;filter:drop-shadow(0 0 0 rgba(56,189,248,0));}
+      50%{background-position:100% 50%;filter:drop-shadow(0 0 12px rgba(56,189,248,.18));}
+    }
+    .brand h1{
+      background:linear-gradient(120deg,#f8fafc,#93c5fd,#22c55e);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      letter-spacing:-.03em;
+    }
+    body.light .brand h1{
+      background:linear-gradient(120deg,#0f172a,#1d4ed8,#047857);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .flag-slogan-clean #animatedSlogan{
+      font-weight:950!important;
+      background:linear-gradient(90deg,#ff9933 0%,#ff9933 31%,#f8fafc 47%,#2563eb 53%,#138808 72%,#138808 100%)!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      color:transparent!important;
+      letter-spacing:.01em;
+      text-shadow:none!important;
+    }
+    body.light .flag-slogan-clean #animatedSlogan{
+      background:linear-gradient(90deg,#ff7a00 0%,#ff9933 31%,#1d4ed8 52%,#138808 72%,#0f7a07 100%)!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      color:transparent!important;
+      text-shadow:none!important;
+    }
+    .flag-slogan-clean .cursor{
+      background:#2563eb!important;
+      box-shadow:0 0 14px rgba(37,99,235,.45)!important;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(15, 98, 254, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 98, 254, 0.035) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: linear-gradient(to bottom, black, transparent 76%);
-      z-index: -1;
-    }
+    @media(max-width:620px){.brand{padding:9px 8px;gap:10px}.brand-logo{flex-basis:48px;width:48px;height:48px;border-radius:16px;padding:7px}.brand h1{font-size:1rem}.brand p{font-size:.68rem}}
 
-    .app-shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    /* Sidebar brand text size fix */
+    .brand-text{max-width:175px;overflow:hidden;}
+    .brand-text h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-    /* Top Bar */
-    .topbar {
-      margin-top: 18px;
-      padding: 12px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.78);
-      border-radius: 24px;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(18px);
-      position: sticky;
-      top: 12px;
-      z-index: 50;
-    }
 
-    .brand-mini {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
+    /* Final size fix: keep main Indoogle title professional, not oversized */
+    .old-home-title.pro-indoogle-title{
+      font-size:clamp(2.35rem,5.1vw,4.45rem)!important;
+      line-height:.96!important;
+      letter-spacing:-.055em!important;
+      margin:6px 0 8px!important;
     }
-
-    .brand-mini img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-      border-radius: 14px;
-      background: #fff;
-      padding: 4px;
-      box-shadow: 0 8px 20px rgba(15, 98, 254, 0.12);
-    }
-
-    .brand-mini strong {
-      display: block;
-      font-size: 1.05rem;
-      letter-spacing: -0.03em;
-      white-space: nowrap;
-    }
-
-    .brand-mini small {
-      display: block;
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 0.74rem;
-      white-space: nowrap;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .icon-btn,
-    .menu-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 15px;
-      border: 1px solid var(--border);
-      background: #fff;
-      color: var(--text);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      box-shadow: 0 8px 18px rgba(16, 24, 40, 0.06);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    }
-
-    .icon-btn:hover,
-    .menu-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(16, 24, 40, 0.12);
-    }
-
-    .login-chip {
-      padding: 11px 16px;
-      border: 0;
-      border-radius: 15px;
-      background: linear-gradient(135deg, var(--primary), #4f8cff);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 12px 24px rgba(15, 98, 254, 0.24);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      white-space: nowrap;
-    }
-
-    .login-chip:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 34px rgba(15, 98, 254, 0.32);
-    }
-
-    /* Hero */
-    .hero {
-      flex: 1;
-      display: grid;
-      place-items: center;
-      padding: 56px 0 30px;
-    }
-
-    .hero-card {
-      width: min(880px, 100%);
-      padding: 44px 34px 30px;
-      text-align: center;
-      background: var(--card);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(22px);
-      position: relative;
-      overflow: hidden;
-      animation: cardIn 0.75s ease both;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(255, 153, 51, 0.18), transparent 28%, transparent 72%, rgba(19, 136, 8, 0.16)),
-        radial-gradient(circle at 50% 0%, rgba(15, 98, 254, 0.18), transparent 36%);
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .logo-wrap {
-      width: 106px;
-      height: 106px;
-      margin: 0 auto 14px;
-      display: grid;
-      place-items: center;
-      border-radius: 32px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.45));
-      border: 1px solid rgba(255, 255, 255, 0.78);
-      box-shadow: 0 18px 40px rgba(15, 98, 254, 0.14);
-    }
-
-    .logo-wrap img {
-      width: 82px;
-      height: 82px;
-      object-fit: contain;
-      animation: logoFloat 4.5s ease-in-out infinite;
-    }
-
-    .made-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-      padding: 8px 13px;
-      border-radius: 999px;
-      background: rgba(15, 98, 254, 0.08);
-      color: var(--primary-dark);
-      font-weight: 800;
-      font-size: 0.82rem;
-      border: 1px solid rgba(15, 98, 254, 0.12);
-    }
-
-    h1 {
-      font-size: clamp(3.4rem, 10vw, 6.2rem);
-      line-height: 0.92;
-      letter-spacing: -0.08em;
-      font-weight: 900;
-      color: transparent;
-      background: linear-gradient(135deg, #0b3fbd 0%, #0f62fe 40%, #ff9933 72%, #138808 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      margin-bottom: 16px;
-    }
-
-    .animated-slogan {
-      min-height: 28px;
-      color: #344054;
-      font-size: clamp(0.98rem, 2.5vw, 1.2rem);
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      margin-bottom: 28px;
-    }
-
-    .animated-slogan span {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: sloganLetterIn 0.45s cubic-bezier(.2, .8, .2, 1) forwards;
-    }
-
-    @keyframes sloganLetterIn {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(0.95);
-        filter: blur(4px);
+    @media(max-width:620px){
+      .old-home-title.pro-indoogle-title{
+        font-size:2.55rem!important;
+        letter-spacing:-.045em!important;
       }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-      }
     }
-
-    .search-card {
-      width: min(720px, 100%);
-      margin: 0 auto;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #fff;
-      border: 1px solid rgba(15, 98, 254, 0.12);
-      border-radius: 999px;
-      box-shadow: 0 18px 40px rgba(16, 24, 40, 0.12);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
-    }
-
-    .search-card:focus-within {
-      transform: translateY(-2px);
-      border-color: rgba(15, 98, 254, 0.36);
-      box-shadow: 0 24px 54px rgba(15, 98, 254, 0.18);
-    }
-
-    .search-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: #f2f6ff;
-      color: var(--primary);
-      flex: 0 0 auto;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 0 2px;
-    }
-
-    input::placeholder {
-      color: #98a2b3;
-      font-weight: 600;
-    }
-
-    .search-btn {
-      border: 0;
-      border-radius: 999px;
-      padding: 14px 23px;
-      background: linear-gradient(135deg, var(--primary), #4c8dff);
-      color: #fff;
-      font-size: 0.98rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 12px 24px rgba(15, 98, 254, 0.25);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      white-space: nowrap;
-    }
-
-    .search-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 30px rgba(15, 98, 254, 0.32);
-    }
-
-    .quick-row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 18px auto 0;
-    }
-
-    .quick-chip {
-      border: 1px solid rgba(15, 98, 254, 0.1);
-      background: rgba(255, 255, 255, 0.72);
-      color: #344054;
-      font-size: 0.85rem;
-      font-weight: 800;
-      padding: 9px 13px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .quick-chip:hover {
-      transform: translateY(-2px);
-      background: #fff;
-    }
-
-    /* Shortcuts */
-    .shortcut-section {
-      width: min(900px, 100%);
-      margin: 26px auto 0;
-    }
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin: 0 6px 12px;
-      color: #344054;
-      font-weight: 900;
-      font-size: 0.95rem;
-    }
-
-    .section-title small {
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .shortcut-bar {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 14px;
-    }
-
-    .shortcut {
-      min-height: 112px;
-      padding: 16px 10px 12px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.85);
-      box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      color: var(--text);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    }
-
-    .shortcut:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 18px 34px rgba(16, 24, 40, 0.13);
-      background: #fff;
-    }
-
-    .shortcut-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 20px;
-      background: #f8fbff;
-      display: grid;
-      place-items: center;
-      font-size: 1.55rem;
-      box-shadow: inset 0 0 0 1px rgba(15, 98, 254, 0.08);
-      margin-bottom: 10px;
-    }
-
-    .shortcut span {
-      font-size: 0.84rem;
-      font-weight: 800;
-      text-align: center;
-      max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    footer {
-      text-align: center;
-      padding: 22px 0 26px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      font-weight: 700;
-    }
-
-    /* Drawer */
-    #overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.48);
-      display: none;
-      z-index: 90;
-      backdrop-filter: blur(5px);
-    }
-
-    #drawer {
-      width: min(340px, 88vw);
-      height: 100%;
-      background: rgba(255, 255, 255, 0.94);
-      position: fixed;
-      top: 0;
-      left: -380px;
-      padding: 18px;
-      box-shadow: 12px 0 40px rgba(16, 24, 40, 0.22);
-      transition: left 0.35s ease;
-      z-index: 100;
-      overflow-y: auto;
-      backdrop-filter: blur(18px);
-      border-right: 1px solid rgba(255, 255, 255, 0.82);
-    }
-
-    .drawer-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .drawer-head strong {
-      font-size: 1.1rem;
-    }
-
-    .user-dashboard {
-      width: 100%;
-      margin: 0 auto 14px;
-      background: linear-gradient(145deg, #ffffff, #f5f8ff);
-      padding: 20px;
-      border-radius: 24px;
-      box-shadow: var(--shadow-soft);
-      text-align: center;
-      border: 1px solid rgba(15, 98, 254, 0.1);
-    }
-
-    .user-dashboard img {
-      width: 82px;
-      height: 82px;
-      object-fit: cover;
-      border-radius: 28px;
-      border: 4px solid #fff;
-      box-shadow: 0 14px 28px rgba(15, 98, 254, 0.16);
-    }
-
-    .user-dashboard h2 {
-      font-size: 1.05rem;
-      margin-top: 11px;
-      color: var(--text);
-    }
-
-    .user-dashboard p {
-      font-size: 0.84rem;
-      color: var(--muted);
-      word-break: break-word;
-      margin-top: 4px;
-    }
-
-    .drawer-btn {
-      width: 100%;
-      padding: 13px 14px;
-      border: 0;
-      border-radius: 16px;
-      cursor: pointer;
-      font-weight: 900;
-      margin: 6px 0 10px;
-    }
-
-    #loginBtn {
-      background: linear-gradient(135deg, var(--primary), #4c8dff);
-      color: #fff;
-      box-shadow: 0 12px 24px rgba(15, 98, 254, 0.22);
-    }
-
-    #logoutBtn {
-      background: #fff1f0;
-      color: #d92d20;
-      border: 1px solid rgba(217, 45, 32, 0.14);
-      display: none;
-    }
-
-    .menu-list {
-      margin-top: 12px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      padding: 13px 12px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      border-radius: 16px;
-      color: #344054;
-      transition: background 0.25s ease, transform 0.25s ease;
-    }
-
-    .menu-item i {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: #f2f6ff;
-      color: var(--primary);
-    }
-
-    .menu-item:hover {
-      background: #f8fbff;
-      transform: translateX(3px);
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      max-width: 320px;
-      padding: 13px 16px;
-      background: #101828;
-      color: #fff;
-      border-radius: 16px;
-      font-weight: 800;
-      box-shadow: 0 16px 40px rgba(16, 24, 40, 0.24);
-      opacity: 0;
-      transform: translateY(14px);
-      pointer-events: none;
-      transition: 0.3s ease;
-      z-index: 200;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Dark Mode */
-    body.dark-mode {
-      --bg: #0b1020;
-      --bg-2: #111827;
-      --card: rgba(17, 24, 39, 0.78);
-      --card-solid: #111827;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --border: rgba(255, 255, 255, 0.12);
-      background:
-        radial-gradient(circle at 12% 10%, rgba(15, 98, 254, 0.26), transparent 34%),
-        radial-gradient(circle at 88% 18%, rgba(255, 153, 51, 0.18), transparent 30%),
-        linear-gradient(135deg, var(--bg), var(--bg-2));
-    }
-
-    body.dark-mode .topbar,
-    body.dark-mode #drawer,
-    body.dark-mode .shortcut,
-    body.dark-mode .quick-chip,
-    body.dark-mode .search-card,
-    body.dark-mode .user-dashboard,
-    body.dark-mode .icon-btn,
-    body.dark-mode .menu-btn {
-      background: rgba(17, 24, 39, 0.86);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: var(--text);
-    }
-
-    body.dark-mode .animated-slogan,
-    body.dark-mode .section-title,
-    body.dark-mode .menu-item,
-    body.dark-mode input[type="text"] {
-      color: var(--text);
-    }
-
-    body.dark-mode .search-icon,
-    body.dark-mode .shortcut-icon,
-    body.dark-mode .menu-item i {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    body.dark-mode .brand-mini small,
-    body.dark-mode .user-dashboard p,
-    body.dark-mode footer,
-    body.dark-mode .section-title small {
-      color: var(--muted);
-    }
-
-    @keyframes cardIn {
-      from {
-        opacity: 0;
-        transform: translateY(24px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+    @media(max-width:380px){
+      .old-home-title.pro-indoogle-title{
+        font-size:2.25rem!important;
       }
     }
 
-    @keyframes logoFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-7px); }
+
+    /* ======================================================
+       All-device responsive polish: mobile, tablet, laptop,
+       desktop and TV. Keeps features unchanged.
+    ====================================================== */
+    img, svg, video{max-width:100%;height:auto;}
+    .browser-shell{max-width:1180px;}
+    .main{min-width:0;}
+    .hero-card,.shield-panel,.shortcut,.stat,.omnibox,.hero-search{min-width:0;}
+
+    @media(min-width:1440px){
+      .browser-shell{width:min(1320px,92vw);}
+      .content{grid-template-columns:300px 1fr;}
+      .main{padding:42px;}
+      .hero{gap:30px;}
+      .old-home-title.pro-indoogle-title{font-size:clamp(3rem,4.1vw,5.25rem)!important;}
+      .home-logo{width:106px;height:106px;}
+      .hero-search{max-width:820px;}
+      .shortcuts{grid-template-columns:repeat(6,minmax(120px,1fr));}
     }
 
-    /* Mobile Responsive */
-    @media (max-width: 860px) {
-      .shortcut-bar {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .hero-card {
-        padding: 34px 18px 24px;
-      }
+    @media(min-width:1800px){
+      .browser-shell{width:min(1560px,88vw);}
+      .content{grid-template-columns:330px 1fr;min-height:780px;}
+      .main{padding:54px;}
+      .hero-card{padding:46px;}
+      .shield-panel{padding:34px;}
+      .old-home-title.pro-indoogle-title{font-size:5.6rem!important;}
+      .slogan{font-size:1.16rem;}
+      .shortcuts{grid-template-columns:repeat(6,minmax(150px,1fr));gap:18px;}
+      .shortcut{min-height:128px;padding:22px 14px;}
     }
 
-    @media (max-width: 560px) {
-      .app-shell {
-        width: min(100% - 20px, 1180px);
-      }
-
-      .topbar {
-        top: 8px;
-        margin-top: 10px;
-        border-radius: 20px;
-      }
-
-      .brand-mini small {
-        display: none;
-      }
-
-      .login-chip {
-        display: none;
-      }
-
-      .hero {
-        padding: 34px 0 20px;
-      }
-
-      .logo-wrap {
-        width: 88px;
-        height: 88px;
-        border-radius: 26px;
-      }
-
-      .logo-wrap img {
-        width: 68px;
-        height: 68px;
-      }
-
-      h1 {
-        font-size: clamp(3.1rem, 18vw, 4.3rem);
-      }
-
-      .search-card {
-        border-radius: 24px;
-        padding: 9px;
-        align-items: stretch;
-        display: grid;
-        grid-template-columns: 42px 1fr;
-      }
-
-      .search-icon {
-        width: 42px;
-        height: 42px;
-      }
-
-      input[type="text"] {
-        min-width: 0;
-      }
-
-      .search-btn {
-        grid-column: 1 / -1;
-        width: 100%;
-        padding: 13px 18px;
-      }
-
-      .shortcut-bar {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-
-      .shortcut {
-        min-height: 104px;
-      }
-
-      .section-title {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .toast {
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-        max-width: none;
-      }
+    @media(min-width:2200px){
+      .browser-shell{width:min(1720px,82vw);}
+      .content{min-height:860px;}
+      .old-home-title.pro-indoogle-title{font-size:6rem!important;}
+      .home-logo{width:122px;height:122px;}
+      .hero-search{height:70px;}
+      .hero-search button{height:52px;}
     }
+
+    @media(max-width:1180px){
+      .browser-shell{width:96vw;}
+      .content{grid-template-columns:270px 1fr;}
+      .main{padding:28px;}
+      .hero{grid-template-columns:1fr;gap:20px;}
+      .shield-panel{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;}
+      .shield-panel .privacy-list{grid-column:1 / -1;grid-template-columns:repeat(2,minmax(0,1fr));}
+      .shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+
+    @media(max-width:980px){
+      html,body{width:100%;overflow-x:hidden;}
+      .browser-shell{width:100%;margin:0;border-radius:0;min-height:100svh;border-left:0;border-right:0;}
+      .top-chrome{position:sticky;top:0;padding:10px;}
+      .tabs-row{gap:7px;overflow-x:auto;scrollbar-width:none;}
+      .tabs-row::-webkit-scrollbar{display:none;}
+      .tab{min-width:170px;max-width:220px;flex:0 0 auto;}
+      .content{grid-template-columns:1fr;min-height:auto;}
+      .sidebar{width:min(84vw,320px);overflow-y:auto;overscroll-behavior:contain;}
+      .main{padding:22px;}
+      .hero{margin-top:6px;}
+      .hero-card{padding:28px;border-radius:28px;}
+      .old-home-title.pro-indoogle-title{font-size:clamp(2.45rem,9vw,4.1rem)!important;}
+      .slogan{font-size:clamp(.88rem,2.6vw,1.05rem);line-height:1.35;text-align:center;}
+      .home-logo{width:86px;height:86px;border-radius:22px;}
+      .shield-panel{border-radius:28px;}
+      .shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+
+    @media(min-width:621px) and (max-width:820px){
+      .address-row{grid-template-columns:auto 1fr auto;gap:8px;}
+      .right-actions{gap:6px;}
+      .icon-btn,.plus-tab{width:36px;height:36px;border-radius:13px;}
+      .omnibox{height:46px;}
+      .go-btn{height:34px;padding:0 15px;}
+      .hero-search{height:58px;}
+      .stats{grid-template-columns:repeat(3,minmax(0,1fr));}
+      .shield-panel .privacy-list{grid-template-columns:repeat(2,minmax(0,1fr));}
+      .shortcut{min-height:108px;}
+    }
+
+    @media(max-width:620px){
+      body{background-attachment:fixed;}
+      .top-chrome{padding:9px 10px;}
+      .address-row{grid-template-columns:auto minmax(0,1fr);gap:8px;}
+      .nav-controls{gap:0;}
+      .menu-toggle{width:42px;height:42px;border-radius:14px;}
+      .omnibox{height:44px;border-radius:18px;padding:0 12px;gap:8px;}
+      .shield{width:28px;height:28px;flex:0 0 28px;}
+      .omnibox input{font-size:.9rem;min-width:0;}
+      .main{padding:16px 12px 22px;}
+      .hero-card{padding:22px 14px;border-radius:24px;}
+      .home-logo{width:76px;height:76px;border-radius:20px;padding:8px;margin-bottom:10px;}
+      .made-badge{font-size:.78rem;padding:7px 11px;margin-bottom:8px;}
+      .old-home-title.pro-indoogle-title{font-size:clamp(2.1rem,13vw,2.85rem)!important;line-height:1!important;letter-spacing:-.045em!important;}
+      .old-slogan{min-height:48px;margin-bottom:16px!important;padding:0 4px;}
+      .flag-slogan-clean #animatedSlogan{font-size:.92rem;line-height:1.35;}
+      .hero-search{width:100%;max-width:100%;display:grid;grid-template-columns:auto 1fr;gap:9px;border-radius:20px;padding:12px;}
+      .hero-search input{font-size:.95rem;min-width:0;}
+      .hero-search button{grid-column:1 / -1;width:100%;height:43px;border-radius:16px;}
+      .stats{grid-template-columns:1fr;gap:10px;margin-top:14px;}
+      .stat{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+      .stat strong{font-size:1.05rem;}
+      .shield-panel{display:block;padding:20px 14px;border-radius:24px;}
+      .shield-big{width:68px;height:68px;border-radius:20px;font-size:1.8rem;margin-bottom:14px;}
+      .shield-panel h3{font-size:1.25rem;}
+      .shield-panel p{font-size:.92rem;}
+      .privacy-list{gap:8px;}
+      .privacy-list div{padding:11px;font-size:.86rem;gap:8px;}
+      .shortcuts-wrap{margin-top:20px;}
+      .section-head{align-items:flex-start;gap:4px;flex-direction:column;}
+      .shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+      .shortcut{min-height:96px;border-radius:18px;padding:13px 8px;}
+      .shortcut-icon{width:46px;height:46px;border-radius:15px;font-size:1.35rem;}
+      footer{font-size:.78rem;padding:16px 10px;line-height:1.45;}
+      .toast{left:12px;right:12px;bottom:12px;text-align:center;}
+    }
+
+    @media(max-width:430px){
+      .main{padding-left:10px;padding-right:10px;}
+      .hero-card{padding:20px 12px;}
+      .old-home-title.pro-indoogle-title{font-size:2.22rem!important;}
+      .flag-slogan-clean #animatedSlogan{font-size:.86rem;}
+      .shortcuts{grid-template-columns:1fr 1fr;}
+      .shortcut span{font-size:.80rem;}
+      .brand-logo{flex-basis:44px;width:44px;height:44px;}
+      .brand h1{font-size:.96rem!important;}
+      .brand p{font-size:.64rem!important;}
+    }
+
+    @media(max-width:340px){
+      .old-home-title.pro-indoogle-title{font-size:1.95rem!important;}
+      .home-logo{width:66px;height:66px;}
+      .made-badge{font-size:.72rem;}
+      .shortcuts{grid-template-columns:1fr;}
+      .sidebar{width:90vw;}
+    }
+
+    @media(orientation:landscape) and (max-height:560px) and (max-width:980px){
+      .top-chrome{position:relative;}
+      .main{padding-top:14px;}
+      .hero-card{padding:18px;}
+      .home-logo{width:60px;height:60px;margin-bottom:6px;}
+      .old-home-title.pro-indoogle-title{font-size:2.2rem!important;margin:2px 0 4px!important;}
+      .old-slogan{min-height:24px;margin-bottom:8px!important;}
+      .stats{display:none;}
+      .shield-panel{padding:16px;}
+      .shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+
   </style>
 </head>
-
 <body>
-  <div id="overlay"></div>
-
-  <!-- Drawer -->
-  <aside id="drawer" aria-label="Navigation drawer">
-    <div class="drawer-head">
-      <strong>Indoogle Menu</strong>
-      <button class="icon-btn" id="closeMenu" type="button" aria-label="Close menu">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="user-dashboard">
-      <img id="profilePic" src="https://i.ibb.co/8jW3P0b/default-user.png" alt="User profile">
-      <h2 id="profileName">Guest User</h2>
-      <p id="profileEmail">Login optional</p>
-    </div>
-
-    <button id="loginBtn" class="drawer-btn" type="button"><i class="fab fa-google"></i> Login with Google</button>
-    <button id="logoutBtn" class="drawer-btn" type="button"><i class="fas fa-right-from-bracket"></i> Logout</button>
-
-    <div class="menu-list">
-      <div class="menu-item"><i class="fas fa-redo"></i> Refresh</div>
-      <div class="menu-item"><i class="fas fa-cog"></i> Settings</div>
-      <div class="menu-item"><i class="fas fa-palette"></i> Theming</div>
-      <div class="menu-item"><i class="fas fa-share-alt"></i> Share</div>
-      <div class="menu-item"><i class="fas fa-info-circle"></i> About</div>
-      <div class="menu-item"><i class="fas fa-times-circle"></i> Exit</div>
-    </div>
-  </aside>
-
-  <main class="app-shell">
-    <!-- Top Bar -->
-    <nav class="topbar">
-      <div class="brand-mini">
-        <button class="menu-btn" id="openMenu" type="button" aria-label="Open menu">
-          <i class="fas fa-bars"></i>
-        </button>
-        <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
-        <div>
-          <strong>Indoogle</strong>
-          <small>India-first search experience</small>
+  <div class="browser-shell">
+    <div class="top-chrome">
+      <div class="tabs-row">
+        <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+        <div class="tab"><i class="fa-solid fa-magnifying-glass"></i> Indoogle New Tab <i class="fa-solid fa-xmark close"></i></div>
+        <button class="plus-tab" title="New Tab"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <div class="address-row">
+        <div class="nav-controls">
+          <button class="icon-btn menu-toggle" id="menuToggle" title="Menu"><i class="fa-solid fa-bars"></i></button>
+          <button class="icon-btn" onclick="history.back()" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+          <button class="icon-btn" onclick="history.forward()" title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
+          <button class="icon-btn" onclick="location.reload()" title="Reload"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+        <form class="omnibox" id="topSearchForm">
+          <div class="shield" title="Indoogle Shield"><i class="fa-solid fa-shield-halved"></i></div>
+          <input id="topQuery" type="text" autocomplete="off" placeholder="Search or type a web address">
+          <button class="go-btn" type="submit">Go</button>
+        </form>
+        <div class="right-actions">
+          <button class="icon-btn hide-mobile" id="themeBtn" title="Theme"><i class="fa-solid fa-moon"></i></button>
+          <button class="icon-btn hide-mobile" id="shareBtn" title="Share"><i class="fa-solid fa-share-nodes"></i></button>
+          <button class="icon-btn" id="privacyTopBtn" title="Privacy"><i class="fa-solid fa-user-shield"></i></button>
         </div>
       </div>
+    </div>
 
-      <div class="top-actions">
-        <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">
-          <i class="fas fa-moon"></i>
-        </button>
-        <button class="login-chip" id="topLoginBtn" type="button">
-          <i class="fab fa-google"></i> Login
-        </button>
-      </div>
-    </nav>
-
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-card">
-        <div class="hero-inner">
-          <div class="logo-wrap">
-            <img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
-          </div>
-
-          <div class="made-pill"><span>🇮🇳</span> Made for Bharat</div>
-          <h1>Indoogle</h1>
-          <p id="animatedSlogan" class="animated-slogan">India’s Own Search Engine, Built for Bharat</p>
-
-          <form id="searchForm" class="search-card">
-            <div class="search-icon"><i class="fas fa-search"></i></div>
-            <input id="query" type="text" placeholder="Search anything on the web..." autocomplete="off">
-            <button class="search-btn" type="submit">Search <i class="fas fa-arrow-right"></i></button>
-          </form>
-
-          <div class="quick-row" aria-label="Quick searches">
-            <button class="quick-chip" type="button" data-search="latest news India">Latest News</button>
-            <button class="quick-chip" type="button" data-search="weather today">Weather</button>
-            <button class="quick-chip" type="button" data-search="government services India">Govt Services</button>
-            <button class="quick-chip" type="button" data-search="technology news">Technology</button>
-          </div>
-
-          <div class="shortcut-section">
-            <div class="section-title">
-              <span>Popular Shortcuts</span>
-              <small>Fast access to daily websites</small>
-            </div>
-
-            <div class="shortcut-bar">
-              <a class="shortcut" href="https://youtube.com" target="_blank" rel="noopener">
-                <div class="shortcut-icon" style="color:#ff0000;"><i class="fab fa-youtube"></i></div>
-                <span>YouTube</span>
-              </a>
-
-              <a class="shortcut" href="https://flipkart.com" target="_blank" rel="noopener">
-                <div class="shortcut-icon" style="color:#2874f0;"><i class="fa-solid fa-cart-shopping"></i></div>
-                <span>Flipkart</span>
-              </a>
-
-              <a class="shortcut" href="https://amazon.in" target="_blank" rel="noopener">
-                <div class="shortcut-icon" style="color:#ff9900;"><i class="fab fa-amazon"></i></div>
-                <span>Amazon</span>
-              </a>
-
-              <a class="shortcut" href="https://www.meesho.com/" target="_blank" rel="noopener">
-                <div class="shortcut-icon" style="color:#d63384;"><i class="fa-solid fa-store"></i></div>
-                <span>Meesho</span>
-              </a>
-
-              <a class="shortcut" href="https://www.ndtv.com/" target="_blank" rel="noopener">
-                <div class="shortcut-icon" style="color:#0066cc;"><i class="fa-solid fa-newspaper"></i></div>
-                <span>NDTV</span>
-              </a>
-
-              <a class="shortcut" href="https://timesofindia.indiatimes.com/" target="_blank" rel="noopener">
-                <div class="shortcut-icon" style="color:#333333;"><i class="fa-regular fa-clock"></i></div>
-                <span>TOI</span>
-              </a>
-            </div>
+    <div class="content">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-logo"><img src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo"></div>
+          <div class="brand-text"><h1>Indoogle</h1><p>Private Search for Bharat</p></div>
+        </div>
+        <div class="side-section">
+          <div class="side-title">Browser</div>
+          <button class="side-item active"><i class="fa-solid fa-house"></i> New Tab</button>
+          <button class="side-item" onclick="focusSearch()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+          <button class="side-item" onclick="location.reload()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          <button class="side-item" id="themeSideBtn"><i class="fa-solid fa-circle-half-stroke"></i> Theme</button>
+        </div>
+        <div class="side-section">
+          <div class="side-title">Privacy & History</div>
+          <div class="privacy-card">
+            <span id="statusPill" class="status-pill"><i class="fa-solid fa-shield"></i> Privacy Mode ON</span>
+            <div class="toggle-row"><span>Privacy Mode</span><label class="switch"><input type="checkbox" id="privacyToggle" checked><span class="slider"></span></label></div>
+            <p id="privacyText" style="margin-top:10px;color:var(--muted);font-weight:700;font-size:.82rem;line-height:1.5">ON: history/settings save nahi honge.</p>
+            <div class="history-list" id="historyList"></div>
+            <button class="small-btn" id="clearHistoryBtn"><i class="fa-solid fa-broom"></i> Clear History</button>
+            <button class="small-btn danger" id="clearDataBtn"><i class="fa-solid fa-trash"></i> Clear Private Data</button>
           </div>
         </div>
-      </div>
-    </section>
+        <div class="side-section">
+          <div class="side-title">Quick Tools</div>
+          <button class="side-item" onclick="openSame('https://duckduckgo.com')"><i class="fa-solid fa-lock"></i> Private Search</button>
+          <button class="side-item" onclick="openSame('https://news.google.com')"><i class="fa-solid fa-newspaper"></i> News</button>
+          <button class="side-item" onclick="openSame('https://mail.google.com')"><i class="fa-solid fa-envelope"></i> Gmail</button>
+        </div>
+      </aside>
 
-    <footer>
-      <p>🇮🇳 Made with ❤️ in India | © 2026 Indoogle</p>
-    </footer>
-  </main>
+      <main class="main">
+        <section class="hero">
+          <div class="hero-card old-brand-hero">
+            <div class="home-logo-wrap">
+              <img class="home-logo" src="https://raw.githubusercontent.com/mdzafar864/Indoogle-/main/logo.png" alt="Indoogle logo">
+              <div class="made-badge">🇮🇳 Made for Bharat</div>
+              <h2 class="old-home-title clean-indoogle-title pro-indoogle-title">Indoogle</h2>
+              <div class="slogan old-slogan flag-slogan-clean"><span id="animatedSlogan"></span><span class="cursor"></span></div>
+            </div>
 
-  <div id="toast" class="toast"></div>
+            <form class="hero-search old-search" id="heroSearchForm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input id="heroQuery" type="text" autocomplete="off" placeholder="Search anything on the web...">
+              <button type="submit">Search</button>
+            </form>
 
-  <!-- Firebase + Login System -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-      from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+            <div class="stats">
+              <div class="stat"><strong id="privacyStat">ON</strong><span>Privacy Mode</span></div>
+              <div class="stat"><strong id="historyCount">0</strong><span>Saved Searches</span></div>
+              <div class="stat"><strong>Same</strong><span>Tab Search</span></div>
+            </div>
+          </div>
+          <div class="shield-panel">
+            <div class="shield-big"><i class="fa-solid fa-shield-heart"></i></div>
+            <h3>Indoogle Shield</h3>
+            <p>Browser-style professional interface with optional privacy mode. Privacy ON hone par searches save nahi hoti. Privacy OFF karne par history aur theme settings save ho sakti hain.</p>
+            <div class="privacy-list">
+              <div><span>Search History Control</span><i class="fa-solid fa-check"></i></div>
+              <div><span>Clear Local Data</span><i class="fa-solid fa-check"></i></div>
+              <div><span>Same Tab Results</span><i class="fa-solid fa-check"></i></div>
+              <div><span>Modern Browser UI</span><i class="fa-solid fa-check"></i></div>
+            </div>
+          </div>
+        </section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCXGwcHR_JrwLfW0vpZmR39rCpRJPBzBBo",
-      authDomain: "indoogle.firebaseapp.com",
-      projectId: "indoogle",
-      storageBucket: "indoogle.firebasestorage.app",
-      messagingSenderId: "249811375898",
-      appId: "1:249811375898:web:126b7f33edbf7cbb58bea3",
-      measurementId: "G-YCFM3F2JTL"
-    };
+        <section class="shortcuts-wrap">
+          <div class="section-head"><h3>Top Sites</h3><span>Browser-like speed dial</span></div>
+          <div class="shortcuts">
+            <a class="shortcut" href="https://youtube.com"><div class="shortcut-icon" style="color:#ff0033"><i class="fab fa-youtube"></i></div><span>YouTube</span></a>
+            <a class="shortcut" href="https://google.com"><div class="shortcut-icon" style="color:#4285f4"><i class="fab fa-google"></i></div><span>Google</span></a>
+            <a class="shortcut" href="https://duckduckgo.com"><div class="shortcut-icon" style="color:#ff8a00"><i class="fa-solid fa-lock"></i></div><span>DuckDuckGo</span></a>
+            <a class="shortcut" href="https://amazon.in"><div class="shortcut-icon" style="color:#ff9900"><i class="fab fa-amazon"></i></div><span>Amazon</span></a>
+            <a class="shortcut" href="https://flipkart.com"><div class="shortcut-icon" style="color:#2874f0"><i class="fa-solid fa-cart-shopping"></i></div><span>Flipkart</span></a>
+            <a class="shortcut" href="https://www.ndtv.com/"><div class="shortcut-icon" style="color:#60a5fa"><i class="fa-solid fa-newspaper"></i></div><span>NDTV</span></a>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer>🇮🇳 Made with ❤️ in India | © 2026 Indoogle Browser</footer>
+  </div>
+  <div class="toast" id="toast">Done</div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    const drawer = document.getElementById("drawer");
-    const overlay = document.getElementById("overlay");
-    const openMenu = document.getElementById("openMenu");
-    const closeMenu = document.getElementById("closeMenu");
-    const loginBtn = document.getElementById("loginBtn");
-    const topLoginBtn = document.getElementById("topLoginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const profilePic = document.getElementById("profilePic");
-    const profileName = document.getElementById("profileName");
-    const profileEmail = document.getElementById("profileEmail");
-    const themeBtn = document.getElementById("themeBtn");
-    const toast = document.getElementById("toast");
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2200);
-    }
-
-    function openDrawer() {
-      drawer.style.left = "0";
-      overlay.style.display = "block";
-    }
-
-    function closeDrawer() {
-      drawer.style.left = "-380px";
-      overlay.style.display = "none";
-    }
-
-    openMenu.onclick = openDrawer;
-    closeMenu.onclick = closeDrawer;
-    overlay.onclick = closeDrawer;
-
-    document.getElementById("searchForm").addEventListener("submit", e => {
-      e.preventDefault();
-      const q = document.getElementById("query").value.trim();
-      if (!q) {
-        showToast("Please type something to search");
-        return;
-      }
-      window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(q);
-    });
-
-    document.querySelectorAll(".quick-chip").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const text = btn.dataset.search || btn.textContent.trim();
-        document.getElementById("query").value = text;
-        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text);
-      });
-    });
-
-    function loginWithGoogle() {
-      signInWithPopup(auth, provider)
-        .then(result => {
-          updateUI(result.user);
-          showToast("Login successful");
-        })
-        .catch(() => showToast("Login cancelled or failed"));
-    }
-
-    loginBtn.onclick = loginWithGoogle;
-    topLoginBtn.onclick = loginWithGoogle;
-
-    logoutBtn.onclick = () => {
-      signOut(auth).then(() => {
-        updateUI(null);
-        showToast("Logged out successfully");
-      });
-    };
-
-    function updateUI(user) {
-      if (user) {
-        profilePic.src = user.photoURL || "https://i.ibb.co/8jW3P0b/default-user.png";
-        profileName.innerText = user.displayName || "Indoogle User";
-        profileEmail.innerText = user.email || "Logged in";
-        loginBtn.style.display = "none";
-        topLoginBtn.style.display = "none";
-        logoutBtn.style.display = "block";
-      } else {
-        profilePic.src = "https://i.ibb.co/8jW3P0b/default-user.png";
-        profileName.innerText = "Guest User";
-        profileEmail.innerText = "Login optional";
-        loginBtn.style.display = "block";
-        topLoginBtn.style.display = "inline-flex";
-        logoutBtn.style.display = "none";
-      }
-    }
-
-    onAuthStateChanged(auth, user => updateUI(user));
-
-    themeBtn.onclick = () => {
-      document.body.classList.toggle("dark-mode");
-      const isDark = document.body.classList.contains("dark-mode");
-      themeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-      localStorage.setItem("indoogle-theme", isDark ? "dark" : "light");
-    };
-
-    if (localStorage.getItem("indoogle-theme") === "dark") {
-      document.body.classList.add("dark-mode");
-      themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
-    }
-
-    const menuItems = document.querySelectorAll(".menu-item");
-    menuItems[0].onclick = () => location.reload();
-    menuItems[1].onclick = () => showToast("Settings page coming soon");
-    menuItems[2].onclick = () => themeBtn.click();
-    menuItems[3].onclick = async () => {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        showToast("Page URL copied");
-      } catch (err) {
-        showToast("Copy failed");
-      }
-    };
-    menuItems[4].onclick = () => showToast("Indoogle - India’s Own Search Engine");
-    menuItems[5].onclick = () => {
-      closeDrawer();
-      showToast("Please close the tab to exit");
-    };
-  </script>
-
-  <!-- Animated Slogan -->
   <script>
-    const slogan = document.getElementById("animatedSlogan");
-    const sloganText = slogan.textContent.trim();
-    slogan.innerHTML = "";
+    const $ = id => document.getElementById(id);
+    const slogan = "India’s Own Search Engine, Built for Bharat";
+    let sloganIndex = 0;
+    function animateSlogan(){
+      const el = $('animatedSlogan');
+      if(!el) return;
+      if(sloganIndex <= slogan.length){ el.textContent = slogan.slice(0, sloganIndex++); setTimeout(animateSlogan, 55); }
+      else { setTimeout(()=>{ sloganIndex = 0; el.textContent = ''; animateSlogan(); }, 2800); }
+    }
+    animateSlogan();
 
-    [...sloganText].forEach((char, index) => {
-      const span = document.createElement("span");
-      span.innerHTML = char === " " ? "&nbsp;" : char;
-      span.style.animationDelay = `${index * 0.035}s`;
-      slogan.appendChild(span);
-    });
-  </script>
+    let privacyMode = localStorage.getItem('indooglePrivacyMode');
+    if(privacyMode === null) privacyMode = 'on';
+    const privacyToggle = $('privacyToggle');
 
-  <!-- PWA Service Worker -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/Indoogle-/service-worker.js").then((reg) => {
-        reg.onupdatefound = () => {
-          const newWorker = reg.installing;
-          newWorker.onstatechange = () => {
-            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-              newWorker.postMessage("skipWaiting");
-              window.location.reload();
-            }
-          };
-        };
-      }).catch(() => {});
+    function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+    function isPrivacyOn(){ return privacyMode === 'on'; }
+    function updatePrivacyUI(){
+      const on = isPrivacyOn();
+      privacyToggle.checked = on;
+      $('statusPill').className = 'status-pill' + (on ? '' : ' off');
+      $('statusPill').innerHTML = on ? '<i class="fa-solid fa-shield"></i> Privacy Mode ON' : '<i class="fa-solid fa-database"></i> Normal Mode Active';
+      $('privacyText').textContent = on ? 'ON: history/settings save nahi honge.' : 'OFF: history aur theme/settings save honge.';
+      $('privacyStat').textContent = on ? 'ON' : 'OFF';
+      renderHistory();
+    }
+    function setPrivacy(on){
+      privacyMode = on ? 'on' : 'off';
+      localStorage.setItem('indooglePrivacyMode', privacyMode);
+      if(on){ clearHistory(); clearPrivateData(false); toast('Privacy Mode ON'); }
+      else toast('Normal Mode Active');
+      updatePrivacyUI();
+    }
+    privacyToggle.addEventListener('change', e => setPrivacy(e.target.checked));
+    $('privacyTopBtn').addEventListener('click', () => { setPrivacy(!isPrivacyOn()); });
+
+    function getHistory(){ try{return JSON.parse(localStorage.getItem('indoogleSearchHistory')||'[]')}catch(e){return []} }
+    function saveSearch(q){ if(isPrivacyOn()) return; let h=getHistory().filter(x=>x.toLowerCase()!==q.toLowerCase()); h.unshift(q); h=h.slice(0,10); localStorage.setItem('indoogleSearchHistory', JSON.stringify(h)); renderHistory(); }
+    function clearHistory(){ localStorage.removeItem('indoogleSearchHistory'); renderHistory(); }
+    function renderHistory(){
+      const h = getHistory(); $('historyCount').textContent = h.length; const box=$('historyList');
+      if(isPrivacyOn()){ box.innerHTML = '<div style="color:var(--muted);font-weight:800;font-size:.82rem;line-height:1.5">Privacy ON hai, search history save nahi hogi.</div>'; return; }
+      box.innerHTML = h.length ? h.map(q=>`<button class="history-chip" onclick="searchWeb('${q.replace(/'/g,"\\'")}')"><i class="fa-solid fa-clock-rotate-left"></i> ${q}</button>`).join('') : '<div style="color:var(--muted);font-weight:800;font-size:.82rem">No saved search yet</div>';
+    }
+    $('clearHistoryBtn').addEventListener('click', ()=>{ clearHistory(); toast('History cleared'); });
+    async function clearPrivateData(show=true){
+      sessionStorage.clear();
+      if('caches' in window){ const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); }
+      if(show) toast('Private data cleared');
+    }
+    $('clearDataBtn').addEventListener('click', ()=>clearPrivateData(true));
+    window.addEventListener('beforeunload', ()=>{ if(isPrivacyOn()){ sessionStorage.clear(); } });
+
+    function normalizeTarget(q){
+      q = q.trim();
+      if(!q) return '';
+      const looksUrl = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/.*)?$/i.test(q);
+      if(looksUrl) return q.startsWith('http') ? q : 'https://' + q;
+      return 'https://www.google.com/search?q=' + encodeURIComponent(q);
+    }
+    function searchWeb(q){ const target=normalizeTarget(q); if(!target) return; saveSearch(q.trim()); window.location.href = target; }
+    function bindSearch(formId,inputId){ $(formId).addEventListener('submit', e=>{ e.preventDefault(); searchWeb($(inputId).value); }); }
+    bindSearch('topSearchForm','topQuery'); bindSearch('heroSearchForm','heroQuery');
+    function focusSearch(){ $('heroQuery').focus(); if(innerWidth<=980) $('sidebar').classList.remove('open'); }
+    function openSame(url){ window.location.href=url; }
+
+    function setTheme(light){
+      document.body.classList.toggle('light', light);
+      $('themeBtn').innerHTML = light ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+      if(!isPrivacyOn()) localStorage.setItem('indoogleTheme', light ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('indoogleTheme');
+    setTheme(savedTheme === 'light');
+    $('themeBtn').addEventListener('click', ()=>setTheme(!document.body.classList.contains('light')));
+    $('themeSideBtn').addEventListener('click', ()=>setTheme(!document.body.classList.contains('light')));
+    $('shareBtn').addEventListener('click', async()=>{ try{ await navigator.clipboard.writeText(location.href); toast('Link copied'); }catch(e){ toast('Copy failed'); } });
+    $('menuToggle').addEventListener('click', ()=>$('sidebar').classList.toggle('open'));
+    document.addEventListener('click', e=>{ if(innerWidth<=980 && $('sidebar').classList.contains('open') && !e.target.closest('#sidebar') && !e.target.closest('#menuToggle')) $('sidebar').classList.remove('open'); });
+    updatePrivacyUI();
+
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.getRegistrations().then(regs=>{ if(isPrivacyOn()) regs.forEach(reg=>reg.unregister()); });
     }
   </script>
 </body>
-
 </html>
